@@ -1,134 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kiwi Vocab — BUA M1 Test</title>
+<!-- KIWI VOCAB — VERSION 2 CAMERA + MICROPHONE -->
+
+<button id="testMediaBtn" onclick="testMedia()">
+  TEST CAMERA &amp; MICROPHONE
+</button>
+
+<div id="mediaStatus"></div>
+
+<video
+  id="setupVideo"
+  class="hidden"
+  autoplay
+  muted
+  playsinline>
+</video>
+
+<button
+  id="beginBtn"
+  class="hidden">
+  BEGIN TEST
+</button>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f2f3ef;
-color:#171717
+.hidden {
+  display: none;
 }
 
-main{
-max-width:650px;
-margin:auto;
-padding:18px
+#setupVideo {
+  width: 100%;
+  max-width: 650px;
+  margin-top: 15px;
+  border-radius: 16px;
+  background: #000;
 }
 
-.card{
-background:#fff;
-border-radius:22px;
-padding:24px;
-margin-top:18px
+#testMediaBtn,
+#beginBtn {
+  width: 100%;
+  padding: 17px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: #171717;
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
 }
 
-h1{
-font-size:38px;
-margin:0 0 8px
+#mediaStatus {
+  margin-top: 12px;
+  font-size: 17px;
 }
+</style>
 
-.sub{
-font-size:18px;
-color:#666;
-margin-bottom:22px
-}
+<script>
 
-label{
-display:block;
-font-size:18px;
-font-weight:bold;
-margin:16px 0 7px
-}
+let stream = null;
 
-input{
-width:100%;
-padding:14px;
-font-size:19px;
-border:1px solid #aaa;
-border-radius:12px
-}
+async function testMedia() {
 
-button,a.save{
-display:block;
-width:100%;
-padding:17px;
-margin-top:16px;
-border:0;
-border-radius:14px;
-background:#171717;
-color:#fff;
-font-size:19px;
-font-weight:bold;
-text-align:center;
-text-decoration:none
-}
+  const status =
+    document.getElementById("mediaStatus");
 
-button:disabled{
-background:#aaa
-}
+  try {
 
-video{
-width:100%;
-max-height:44vh;
-object-fit:cover;
-border-radius:16px;
-background:#000;
-margin-top:14px
-}
+    status.textContent =
+      "Requesting camera and microphone...";
 
-.word{
-text-align:center;
-font-size:42px;
-font-weight:bold;
-margin:24px 0 12px;
-overflow-wrap:anywhere
-}
-
-.timer{
-text-align:center;
-font-size:64px;
-font-weight:bold;
-margin:8px
-}
-
-.status{
-text-align:center;
-font-size:18px;
-margin:12px
-}
-
-.instructions{
-text-align:center;
-font-size:18px;
-line-height:1.55
-}
-
-.message{
-margin-top:16px;
-padding:13px;
-border-radius:12px;
-background:#eee
-}
-
-.good{
-background:#e5f4e8
-}
-
-.bad{
-background:#ffe4e4
-}
-
-.micBox{
-margin-top:16px;
-padding:15px;
-background:#f2f3ef;
-border-radius:14px
-}
-
-.meter
+    stream =
+      await navigator.mediaDevices.getUserMedia({
+       
