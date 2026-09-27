@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiwi Vocab — BUA M1</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f2f3ef;
+  color: #171717;
+}
+
+.container {
+  max-width: 650px;
+  margin: auto;
+  padding: 25px;
+}
+
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 28px;
+  margin-top: 20px;
+}
+
+h1 {
+  font-size: 42px;
+  margin: 0 0 10px;
+}
+
+.subtitle {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  font-size: 20px;
+  border-radius: 12px;
+  border: 1px solid #aaa;
+}
+
+button {
+  width: 100%;
+  padding: 18px;
+  margin-top: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  border: 0;
+  border-radius: 14px;
+  background: #111;
+  color: white;
+}
+
+video {
+  width: 100%;
+  border-radius: 16px;
+  background: black;
+  margin-top: 15px;
+}
+
+.word {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 30px 0 15px;
+}
+
+.timer {
+  text-align: center;
+  font-size: 55px;
+  font-weight: bold;
+}
+
+.status {
+  text-align: center;
+  font-size: 22px;
+  margin: 15px;
+}
+
+.instructions {
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="login" class="card">
+
+<h1>🥝 Kiwi Vocab</h1>
+
+<div class="subtitle">
+BUA Vocabulary Speaking Assessment — M1
+</div>
+
+<label>Student ID</label>
+<input id="studentID" type="text">
+
+<label>English Name</label>
+<input id="studentName" type="text">
+
+<button onclick="startAssessment()">
+START ASSESSMENT
+</button>
+
+<p>
+Allow camera and microphone access.
+Once started, questions move forward automatically.
+</p>
+
+</div>
+
+
+<div id="assessment" class="card hidden">
+
+<div id="questionNumber" class="status"></div>
+
+<video id="preview" autoplay muted playsinline></video>
+
+<div id="word" class="word"></div>
+
+<div id="phase" class="status"></div>
+
+<div id="timer" class="timer"></div>
+
+<div class="instructions">
+Say the word.<br>
+Explain its meaning in English.<br>
+Give an original example sentence.
+</div>
+
+</div>
+
+
+<div id="finished" class="card hidden">
+
+<h1>Assessment Complete ✓</h1>
+
+<p>
+Your recording is ready.
+</p>
+
+<button id="downloadButton">
+SAVE RECORDING
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+const vocabulary = [
+"deglaciation",
+"projection",
+"interglacial period",
+"invasive species",
+"magnitude",
+"haptics",
+"cognitive",
+"perceptual",
+"diagnostic",
+"climate change",
+"global warming",
+"greenhouse gases",
+"carbon dioxide",
+"emissions",
+"ecosystem",
+"biodiversity",
+"extinction",
+"habitat",
+"adaptation",
+"consumer",
+"marketing",
+"interaction",
+"communication"
+];
+
+const QUESTION_COUNT = 10;
+const PREP_TIME = 10;
+const ANSWER_TIME = 20;
+
+let questions = [];
+let currentQuestion = 0;
+
+let stream;
+let recorder;
+let recordedChunks = [];
+
+
+function shuffle(array) {
+
+return [...array].sort(() => Math.random() - 0.5);
+
+}
+
+
+async function startAssessment() {
+
+const studentID =
+document.getElementById("studentID").value.trim();
+
+const studentName =
+document.getElementById("studentName").value.trim();
+
+if (!studentID || !studentName) {
+
+alert("Please enter Student ID and English Name.");
+
+return;
+
+}
+
+try {
+
+stream =
+await navigator.mediaDevices.getUserMedia({
+video: {
+facingMode: "user"
+},
+audio: true
+});
+
+document.getElementById("preview").srcObject = stream;
+
+} catch(error) {
+
+alert(
+"Camera/microphone access failed. Please allow camera and microphone permission and try again."
+);
+
+return;
+
+}
+
+questions =
