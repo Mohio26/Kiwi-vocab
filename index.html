@@ -2,68 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kiwi Vocab — BUA M1.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kiwi Vocab — BUA M1</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f2f3ef;color:#171717}
-main{max-width:650px;margin:auto;padding:18px}
-.card{background:#fff;border-radius:22px;padding:24px;margin-top:18px}
-h1{font-size:38px;margin:0 0 8px}
-.sub{font-size:18px;color:#666;margin-bottom:22px}
-label{display:block;font-size:18px;font-weight:bold;margin:16px 0 7px}
-input{width:100%;padding:14px;font-size:19px;border:1px solid #aaa;border-radius:12px}
-button,a.save{display:block;width:100%;padding:17px;margin-top:16px;border:0;border-radius:14px;background:#171717;color:#fff;font-size:19px;font-weight:bold;text-align:center;text-decoration:none}
-button:disabled{background:#aaa;color:#eee}
-.secondary{background:#555}
-video{width:100%;max-height:44vh;object-fit:cover;border-radius:16px;background:#000;margin-top:14px}
-.word{text-align:center;font-size:42px;font-weight:bold;margin:24px 0 12px;overflow-wrap:anywhere}
-.timer{text-align:center;font-size:64px;font-weight:bold;margin:8px}
-.status{text-align:center;font-size:19px;margin:12px}
-.instructions{text-align:center;font-size:18px;line-height:1.55}
-.message{margin-top:16px;padding:13px;border-radius:12px;background:#eee}
-.good{background:#e5f4e8}
-.bad{background:#ffe4e4}
-.center{text-align:center;padding:35px 8px}
-.count{font-size:72px;font-weight:bold;margin-top:18px}
-.hidden{display:none!important}
-.small{font-size:14px;color:#666;margin-top:10px}
-</style>
-</head>
-<body>
-<main>
-<section id="setup" class="card">
-<h1>🥝 Kiwi Vocab</h1>
-<div class="sub">BUA Vocabulary Speaking Assessment — M1.2</div>
-<label for="sid">Student ID</label>
-<input id="sid" type="text" autocomplete="off">
-<label for="sname">English Name</label>
-<input id="sname" type="text" autocomplete="off">
-<button id="testBtn">1. TEST CAMERA &amp; MICROPHONE</button>
-<div id="msg" class="message">Enter your details, then test your camera and microphone.</div>
-<video id="setupVideo" class="hidden" autoplay muted playsinline></video>
-<button id="beginBtn" class="hidden">2. BEGIN TEST</button>
-</section>
+* {
+  box-sizing: border-box;
+}
 
-<section id="test" class="card hidden">
-<div id="progress" class="status"></div>
-<video id="testVideo" autoplay muted playsinline></video>
-<div id="word" class="word"></div>
-<div class="status">🔴 RECORDING — SPEAK NOW</div>
-<div id="timer" class="timer">15</div>
-<div class="instructions">Say the word.<br>Explain its meaning in English.<br>Give an original example sentence.</div>
-<button id="nextBtn" disabled>NEXT WORD →</button>
-<div id="hint" class="status">NEXT will unlock in 2 seconds.</div>
-</section>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f3ef;
+  color: #171717;
+}
 
-<section id="between" class="card hidden">
-<div class="center">
-<h1>✓ Good job!</h1>
-<div id="betweenText">Next question.</div>
-<div id="count" class="count">3</div>
-</div>
-</section>
+main {
+  max-width: 650px;
+  margin: auto;
+  padding: 18px;
+}
 
-<section id="done" class="card hidden">
-<h1>Assessment Complete ✓</h1>
-<div id="doneMsg" class="message good">Preparing
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 24px;
+  margin-top: 18px;
+}
+
+h1 {
+  font-size: 38px;
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 22px;
+}
+
+label {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 16px 0 7px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 19px;
+  border: 1px solid #aaa;
+  border-radius: 12px;
+}
+
+button,
+.save {
+  display: block;
+  width: 100%;
+  padding: 17px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: #171717;
+  color: white;
+  font-size: 19px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+
+video {
+  width: 100%;
