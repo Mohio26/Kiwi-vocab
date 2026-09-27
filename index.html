@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kiwi Vocab — BUA M1</title>
+<title>Kiwi Vocab — BUA M1.1</title>
 
 <style>
 body {
@@ -16,30 +16,30 @@ body {
 .container {
   max-width: 650px;
   margin: auto;
-  padding: 25px;
+  padding: 20px;
 }
 
 .card {
   background: white;
   border-radius: 22px;
-  padding: 28px;
+  padding: 26px;
   margin-top: 20px;
 }
 
 h1 {
-  font-size: 42px;
+  font-size: 40px;
   margin: 0 0 10px;
 }
 
 .subtitle {
   font-size: 20px;
   color: #666;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 label {
   display: block;
-  font-size: 20px;
+  font-size: 19px;
   margin-top: 18px;
   margin-bottom: 8px;
 }
@@ -55,14 +55,22 @@ input {
 
 button {
   width: 100%;
-  padding: 18px;
-  margin-top: 25px;
-  font-size: 20px;
+  padding: 17px;
+  margin-top: 18px;
+  font-size: 19px;
   font-weight: bold;
   border: 0;
   border-radius: 14px;
   background: #111;
   color: white;
+}
+
+button:disabled {
+  background: #aaa;
+}
+
+.secondary {
+  background: #555;
 }
 
 video {
@@ -74,20 +82,20 @@ video {
 
 .word {
   text-align: center;
-  font-size: 42px;
+  font-size: 40px;
   font-weight: bold;
-  margin: 30px 0 15px;
+  margin: 28px 0 15px;
 }
 
 .timer {
   text-align: center;
-  font-size: 55px;
+  font-size: 54px;
   font-weight: bold;
 }
 
 .status {
   text-align: center;
-  font-size: 22px;
+  font-size: 21px;
   margin: 15px;
 }
 
@@ -95,6 +103,22 @@ video {
   text-align: center;
   font-size: 18px;
   line-height: 1.5;
+}
+
+.message {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #eee;
+  line-height: 1.4;
+}
+
+.success {
+  background: #e4f5e7;
+}
+
+.error {
+  background: #ffe4e4;
 }
 
 .hidden {
@@ -107,12 +131,12 @@ video {
 
 <div class="container">
 
-<div id="login" class="card">
+<div id="setup" class="card">
 
 <h1>🥝 Kiwi Vocab</h1>
 
 <div class="subtitle">
-BUA Vocabulary Speaking Assessment — M1
+BUA Vocabulary Speaking Assessment — M1.1 Test
 </div>
 
 <label>Student ID</label>
@@ -121,14 +145,25 @@ BUA Vocabulary Speaking Assessment — M1
 <label>English Name</label>
 <input id="studentName" type="text">
 
-<button onclick="startAssessment()">
-START ASSESSMENT
+<button id="cameraButton" onclick="testCamera()">
+1. TEST CAMERA & MICROPHONE
 </button>
 
-<p>
-Allow camera and microphone access.
-Once started, questions move forward automatically.
-</p>
+<div id="setupMessage" class="message">
+First test your camera and microphone.
+</div>
+
+<video id="setupPreview"
+       class="hidden"
+       autoplay
+       muted
+       playsinline></video>
+
+<button id="beginButton"
+        class="hidden"
+        onclick="beginAssessment()">
+2. BEGIN TEST
+</button>
 
 </div>
 
@@ -137,7 +172,10 @@ Once started, questions move forward automatically.
 
 <div id="questionNumber" class="status"></div>
 
-<video id="preview" autoplay muted playsinline></video>
+<video id="assessmentPreview"
+       autoplay
+       muted
+       playsinline></video>
 
 <div id="word" class="word"></div>
 
@@ -158,12 +196,16 @@ Give an original example sentence.
 
 <h1>Assessment Complete ✓</h1>
 
-<p>
-Your recording is ready.
-</p>
+<div id="finishMessage" class="message success">
+Recording completed.
+</div>
 
 <button id="downloadButton">
 SAVE RECORDING
+</button>
+
+<button class="secondary" onclick="restartAssessment()">
+RESTART TEST
 </button>
 
 </div>
@@ -174,86 +216,563 @@ SAVE RECORDING
 <script>
 
 const vocabulary = [
-"deglaciation",
-"projection",
-"interglacial period",
-"invasive species",
-"magnitude",
-"haptics",
-"cognitive",
-"perceptual",
-"diagnostic",
-"climate change",
-"global warming",
-"greenhouse gases",
-"carbon dioxide",
-"emissions",
-"ecosystem",
-"biodiversity",
-"extinction",
-"habitat",
-"adaptation",
-"consumer",
-"marketing",
-"interaction",
-"communication"
+  "deglaciation",
+  "projection",
+  "interglacial period",
+  "invasive species",
+  "magnitude",
+  "haptics",
+  "cognitive",
+  "perceptual",
+  "diagnostic",
+  "climate change",
+  "global warming",
+  "greenhouse gases",
+  "carbon dioxide",
+  "emissions",
+  "ecosystem",
+  "biodiversity",
+  "extinction",
+  "habitat",
+  "adaptation",
+  "consumer",
+  "marketing",
+  "interaction",
+  "communication"
 ];
 
-const QUESTION_COUNT = 10;
+/*
+Diagnostic version:
+2 questions only.
+After the system passes testing,
+change this back to 10.
+*/
+const QUESTION_COUNT = 2;
+
 const PREP_TIME = 10;
 const ANSWER_TIME = 20;
 
 let questions = [];
 let currentQuestion = 0;
 
-let stream;
-let recorder;
+let stream = null;
+let recorder = null;
 let recordedChunks = [];
+let recordingURL = null;
 
 
 function shuffle(array) {
+  const copy = [...array];
 
-return [...array].sort(() => Math.random() - 0.5);
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
 
+    [copy[i], copy[j]] =
+      [copy[j], copy[i]];
+  }
+
+  return copy;
 }
 
 
-async function startAssessment() {
+function showSetupMessage(text, type) {
 
-const studentID =
-document.getElementById("studentID").value.trim();
+  const box =
+    document.getElementById("setupMessage");
 
-const studentName =
-document.getElementById("studentName").value.trim();
+  box.textContent = text;
 
-if (!studentID || !studentName) {
+  box.className = "message";
 
-alert("Please enter Student ID and English Name.");
+  if (type === "success") {
+    box.classList.add("success");
+  }
 
-return;
-
+  if (type === "error") {
+    box.classList.add("error");
+  }
 }
 
-try {
 
-stream =
-await navigator.mediaDevices.getUserMedia({
-video: {
-facingMode: "user"
-},
-audio: true
-});
+async function testCamera() {
 
-document.getElementById("preview").srcObject = stream;
+  const studentID =
+    document.getElementById("studentID")
+      .value.trim();
 
-} catch(error) {
+  const studentName =
+    document.getElementById("studentName")
+      .value.trim();
 
-alert(
-"Camera/microphone access failed. Please allow camera and microphone permission and try again."
-);
+  if (!studentID || !studentName) {
 
-return;
+    showSetupMessage(
+      "Please enter Student ID and English Name first.",
+      "error"
+    );
 
+    return;
+  }
+
+
+  if (!navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia) {
+
+    showSetupMessage(
+      "This browser does not provide camera/microphone access. Open the HTTPS Kiwi Vocab page in Chrome and try again.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  showSetupMessage(
+    "Requesting camera and microphone permission...",
+    ""
+  );
+
+
+  try {
+
+    if (stream) {
+      stream.getTracks()
+        .forEach(track => track.stop());
+    }
+
+    stream =
+      await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user"
+        },
+        audio: true
+      });
+
+
+    const preview =
+      document.getElementById("setupPreview");
+
+    preview.srcObject = stream;
+
+    preview.classList.remove("hidden");
+
+
+    if (!window.MediaRecorder) {
+
+      showSetupMessage(
+        "Camera and microphone work, but this browser does not support MediaRecorder.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    document
+      .getElementById("beginButton")
+      .classList.remove("hidden");
+
+
+    showSetupMessage(
+      "✓ Camera and microphone ready. If you can see yourself, press BEGIN TEST.",
+      "success"
+    );
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    showSetupMessage(
+      "Camera/microphone failed: " +
+      error.name +
+      ". Check Chrome site permissions and try again.",
+      "error"
+    );
+  }
 }
 
-questions =
+
+function chooseMimeType() {
+
+  const types = [
+    "video/webm;codecs=vp8,opus",
+    "video/webm",
+    "video/mp4"
+  ];
+
+  for (const type of types) {
+
+    if (MediaRecorder.isTypeSupported &&
+        MediaRecorder.isTypeSupported(type)) {
+
+      return type;
+    }
+  }
+
+  return "";
+}
+
+
+async function beginAssessment() {
+
+  if (!stream) {
+
+    showSetupMessage(
+      "Please test the camera and microphone first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  currentQuestion = 0;
+
+  questions =
+    shuffle(vocabulary)
+      .slice(0, QUESTION_COUNT);
+
+  recordedChunks = [];
+
+
+  document
+    .getElementById("setup")
+    .classList.add("hidden");
+
+  document
+    .getElementById("assessment")
+    .classList.remove("hidden");
+
+
+  document
+    .getElementById("assessmentPreview")
+    .srcObject = stream;
+
+
+  try {
+
+    const mimeType = chooseMimeType();
+
+    if (mimeType) {
+
+      recorder =
+        new MediaRecorder(
+          stream,
+          { mimeType: mimeType }
+        );
+
+    } else {
+
+      recorder =
+        new MediaRecorder(stream);
+    }
+
+
+    recorder.ondataavailable = event => {
+
+      if (event.data &&
+          event.data.size > 0) {
+
+        recordedChunks.push(event.data);
+      }
+    };
+
+
+    recorder.onerror = event => {
+
+      console.error(
+        "Recorder error:",
+        event
+      );
+    };
+
+
+    recorder.start(1000);
+
+    await runQuestion();
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    alert(
+      "Recording could not start: " +
+      error.name +
+      ". Please restart the test."
+    );
+
+    restartAssessment();
+  }
+}
+
+
+async function runQuestion() {
+
+  if (currentQuestion >=
+      questions.length) {
+
+    finishAssessment();
+
+    return;
+  }
+
+
+  document
+    .getElementById("questionNumber")
+    .textContent =
+      "Question " +
+      (currentQuestion + 1) +
+      " of " +
+      questions.length;
+
+
+  document
+    .getElementById("word")
+    .textContent =
+      questions[currentQuestion];
+
+
+  document
+    .getElementById("phase")
+    .textContent =
+      "PREPARE";
+
+
+  await countdown(PREP_TIME);
+
+
+  document
+    .getElementById("phase")
+    .textContent =
+      "🔴 RECORDING — SPEAK NOW";
+
+
+  await countdown(ANSWER_TIME);
+
+
+  currentQuestion++;
+
+  await runQuestion();
+}
+
+
+function countdown(seconds) {
+
+  return new Promise(resolve => {
+
+    let remaining = seconds;
+
+    const timer =
+      document.getElementById("timer");
+
+    timer.textContent = remaining;
+
+
+    const interval =
+      setInterval(() => {
+
+        remaining--;
+
+        timer.textContent = remaining;
+
+        if (remaining <= 0) {
+
+          clearInterval(interval);
+
+          resolve();
+        }
+
+      }, 1000);
+  });
+}
+
+
+function finishAssessment() {
+
+  document
+    .getElementById("assessment")
+    .classList.add("hidden");
+
+  document
+    .getElementById("finished")
+    .classList.remove("hidden");
+
+
+  if (!recorder) {
+
+    document
+      .getElementById("finishMessage")
+      .textContent =
+        "No recorder was available.";
+
+    return;
+  }
+
+
+  recorder.onstop = () => {
+
+    const type =
+      recorder.mimeType ||
+      "video/webm";
+
+
+    const blob =
+      new Blob(
+        recordedChunks,
+        { type: type }
+      );
+
+
+    if (recordingURL) {
+      URL.revokeObjectURL(
+        recordingURL
+      );
+    }
+
+
+    recordingURL =
+      URL.createObjectURL(blob);
+
+
+    const button =
+      document.getElementById(
+        "downloadButton"
+      );
+
+
+    button.onclick = () => {
+
+      const studentID =
+        document.getElementById(
+          "studentID"
+        ).value.trim();
+
+
+      const studentName =
+        document.getElementById(
+          "studentName"
+        ).value.trim();
+
+
+      let extension = "webm";
+
+      if (type.includes("mp4")) {
+        extension = "mp4";
+      }
+
+
+      const link =
+        document.createElement("a");
+
+      link.href = recordingURL;
+
+      link.download =
+        "KiwiVocab_" +
+        studentID +
+        "_" +
+        studentName +
+        "." +
+        extension;
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+    };
+
+
+    document
+      .getElementById("finishMessage")
+      .textContent =
+        "✓ Recording ready. Press SAVE RECORDING and then play the file to check video and sound.";
+  };
+
+
+  if (recorder.state !== "inactive") {
+    recorder.stop();
+  }
+
+
+  if (stream) {
+
+    stream.getTracks()
+      .forEach(track => track.stop());
+  }
+}
+
+
+function restartAssessment() {
+
+  if (recorder &&
+      recorder.state !== "inactive") {
+
+    try {
+      recorder.stop();
+    } catch(e) {}
+  }
+
+
+  if (stream) {
+
+    stream.getTracks()
+      .forEach(track => track.stop());
+  }
+
+
+  stream = null;
+  recorder = null;
+  recordedChunks = [];
+  questions = [];
+  currentQuestion = 0;
+
+
+  if (recordingURL) {
+
+    URL.revokeObjectURL(
+      recordingURL
+    );
+
+    recordingURL = null;
+  }
+
+
+  document
+    .getElementById("finished")
+    .classList.add("hidden");
+
+  document
+    .getElementById("assessment")
+    .classList.add("hidden");
+
+  document
+    .getElementById("setup")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("beginButton")
+    .classList.add("hidden");
+
+  document
+    .getElementById("setupPreview")
+    .classList.add("hidden");
+
+  document
+    .getElementById("setupPreview")
+    .srcObject = null;
+
+
+  showSetupMessage(
+    "Restarted. Press TEST CAMERA & MICROPHONE when ready.",
+    ""
+  );
+}
+
+</script>
+
+</body>
+</html>
