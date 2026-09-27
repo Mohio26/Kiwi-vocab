@@ -3,182 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kiwi Vocab — BUA</title>
+<title>Kiwi Vocab — BUA M1</title>
 
 <style>
 *{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f2f3ef;
-color:#171717
-}
-
-main{
-max-width:650px;
-margin:auto;
-padding:18px
-}
-
-.card{
-background:#fff;
-border-radius:22px;
-padding:24px;
-margin-top:18px
-}
-
-h1{
-font-size:38px;
-margin:0 0 8px
-}
-
-.sub{
-font-size:18px;
-color:#666;
-margin-bottom:22px
-}
-
-label{
-display:block;
-font-size:18px;
-font-weight:bold;
-margin:16px 0 7px
-}
-
-input{
-width:100%;
-padding:14px;
-font-size:19px;
-border:1px solid #aaa;
-border-radius:12px
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f3ef;color:#171717}
+main{max-width:650px;margin:auto;padding:18px}
+.card{background:#fff;border-radius:22px;padding:24px;margin-top:18px}
+h1{font-size:38px;margin:0 0 8px}
+.sub{font-size:18px;color:#666;margin-bottom:22px}
+label{display:block;font-size:18px;font-weight:bold;margin:16px 0 7px}
+input{width:100%;padding:14px;font-size:19px;border:1px solid #aaa;border-radius:12px}
 
 button,a.save{
-display:block;
-width:100%;
-padding:17px;
-margin-top:16px;
-border:0;
-border-radius:14px;
-background:#171717;
-color:#fff;
-font-size:19px;
-font-weight:bold;
-text-align:center;
-text-decoration:none
+display:block;width:100%;padding:17px;margin-top:16px;border:0;
+border-radius:14px;background:#171717;color:#fff;font-size:19px;
+font-weight:bold;text-align:center;text-decoration:none
 }
 
 video{
-width:100%;
-max-height:44vh;
-object-fit:cover;
-border-radius:16px;
-background:#000;
-margin-top:14px
+width:100%;max-height:44vh;object-fit:cover;border-radius:16px;
+background:#000;margin-top:14px
 }
 
-.word{
-text-align:center;
-font-size:42px;
-font-weight:bold;
-margin:24px 0 12px;
-overflow-wrap:anywhere
-}
+.word{text-align:center;font-size:42px;font-weight:bold;margin:24px 0 12px}
+.timer{text-align:center;font-size:64px;font-weight:bold;margin:8px}
+.status{text-align:center;font-size:19px;margin:12px}
+.instructions{text-align:center;font-size:18px;line-height:1.55}
+.message{margin-top:16px;padding:13px;border-radius:12px;background:#eee}
+.good{background:#e5f4e8}
+.bad{background:#ffe4e4}
+.hidden{display:none!important}
 
-.timer{
-text-align:center;
-font-size:64px;
-font-weight:bold;
-margin:8px
-}
-
-.status{
-text-align:center;
-font-size:19px;
-margin:12px
-}
-
-.instructions{
-text-align:center;
-font-size:18px;
-line-height:1.55
-}
-
-.message{
+.micBox{
 margin-top:16px;
-padding:13px;
+padding:16px;
+background:#f2f3ef;
+border-radius:14px
+}
+
+.micTitle{
+font-size:17px;
+font-weight:bold;
+margin-bottom:10px
+}
+
+.meter{
+width:100%;
+height:24px;
+background:#ccc;
 border-radius:12px;
-background:#eee
+overflow:hidden
 }
 
-.good{
-background:#e5f4e8
+#micLevel{
+width:0%;
+height:100%;
+background:#222;
+transition:width .08s linear
 }
 
-.bad{
-background:#ffe4e4
-}
-
-.hidden{
-display:none!important
+.micText{
+text-align:center;
+margin-top:8px;
+font-size:15px;
+color:#555
 }
 </style>
 </head>
 
 <body>
-
 <main>
 
 <section id="setup" class="card">
 
 <h1>🥝 Kiwi Vocab</h1>
+<div class="sub">BUA Vocabulary Speaking Assessment — M1</div>
 
-<div class="sub">
-BUA Vocabulary Speaking Assessment
-</div>
+<label for="studentID">Student ID</label>
+<input id="studentID" type="text">
 
-<label for="sid">Student ID</label>
-<input id="sid" type="text" autocomplete="off">
+<label for="studentName">English Name</label>
+<input id="studentName" type="text">
 
-<label for="sname">English Name</label>
-<input id="sname" type="text" autocomplete="off">
+<button id="testButton">TEST CAMERA &amp; MICROPHONE</button>
 
-<button id="testBtn">
-1. TEST CAMERA &amp; MICROPHONE
-</button>
-
-<div id="msg" class="message">
+<div id="message" class="message">
 Enter your details, then test your camera and microphone.
 </div>
 
-<video
-id="setupVideo"
-class="hidden"
-autoplay
-muted
-playsinline>
-</video>
+<div id="equipmentTest" class="hidden">
 
-<button
-id="beginBtn"
-class="hidden">
-2. BEGIN TEST
+<video id="setupVideo" autoplay muted playsinline></video>
+
+<div class="micBox">
+<div class="micTitle">🎤 Microphone Test</div>
+
+<div class="meter">
+<div id="micLevel"></div>
+</div>
+
+<div id="micText" class="micText">
+Speak normally. The bar should move when you talk.
+</div>
+</div>
+
+<button id="startButton">
+BEGIN ASSESSMENT
 </button>
+
+</div>
 
 </section>
 
 
-<section id="test" class="card hidden">
+<section id="assessment" class="card hidden">
 
 <div id="progress" class="status"></div>
 
-<video
-id="testVideo"
-autoplay
-muted
-playsinline>
-</video>
+<video id="assessmentVideo" autoplay muted playsinline></video>
 
 <div id="phase" class="status"></div>
 
@@ -192,230 +135,4 @@ Explain its meaning in English.<br>
 Give an original example sentence.
 </div>
 
-</section>
-
-
-<section id="done" class="card hidden">
-
-<h1>Assessment Complete ✓</h1>
-
-<div id="doneMsg" class="message good">
-Preparing your recording...
-</div>
-
-<video
-id="savedVideo"
-class="hidden"
-controls
-playsinline>
-</video>
-
-<a
-id="saveLink"
-class="save hidden"
-href="#">
-SAVE RECORDING
-</a>
-
-</section>
-
-</main>
-
-
-<script>
-
-"use strict";
-
-const WORDS=[
-"deglaciation",
-"projection",
-"interglacial period",
-"invasive species",
-"magnitude",
-"haptics",
-"cognitive",
-"perceptual",
-"diagnostic",
-"climate change",
-"global warming",
-"greenhouse gases",
-"carbon dioxide",
-"emissions",
-"ecosystem",
-"biodiversity",
-"extinction",
-"habitat",
-"adaptation",
-"consumer",
-"marketing",
-"interaction",
-"communication"
-];
-
-const QUESTION_COUNT=2;
-const PREP_SECONDS=10;
-const ANSWER_SECONDS=20;
-
-const $=id=>document.getElementById(id);
-
-let stream=null;
-let recorder=null;
-let chunks=[];
-let questions=[];
-let index=0;
-let timer=null;
-
-$("testBtn").onclick=testMedia;
-$("beginBtn").onclick=begin;
-
-
-function screen(id){
-
-["setup","test","done"].forEach(x=>{
-
-$(x).classList.toggle(
-"hidden",
-x!==id
-);
-
-});
-
-}
-
-
-function message(text,type=""){
-
-$("msg").textContent=text;
-
-$("msg").className=
-"message"+(type?" "+type:"");
-
-}
-
-
-async function testMedia(){
-
-if(
-!$("sid").value.trim() ||
-!$("sname").value.trim()
-){
-
-message(
-"Please enter Student ID and English Name first.",
-"bad"
-);
-
-return;
-
-}
-
-
-if(
-!navigator.mediaDevices ||
-!navigator.mediaDevices.getUserMedia
-){
-
-message(
-"Camera and microphone unavailable. Open the HTTPS page in Chrome.",
-"bad"
-);
-
-return;
-
-}
-
-
-message(
-"Requesting camera and microphone permission..."
-);
-
-
-try{
-
-stopStream();
-
-stream=
-await navigator.mediaDevices.getUserMedia({
-
-video:{
-facingMode:"user"
-},
-
-audio:true
-
-});
-
-
-$("setupVideo").srcObject=stream;
-
-$("setupVideo")
-.classList.remove("hidden");
-
-
-await $("setupVideo").play();
-
-
-if(!window.MediaRecorder){
-
-message(
-"Camera works, but this browser cannot record video.",
-"bad"
-);
-
-return;
-
-}
-
-
-const audioTracks=
-stream.getAudioTracks();
-
-const videoTracks=
-stream.getVideoTracks();
-
-
-if(
-audioTracks.length===0 ||
-videoTracks.length===0
-){
-
-message(
-"Camera or microphone was not detected.",
-"bad"
-);
-
-return;
-
-}
-
-
-$("beginBtn")
-.classList.remove("hidden");
-
-
-message(
-"✓ Camera and microphone connected. Check that you can see yourself, then press BEGIN TEST.",
-"good"
-);
-
-
-}catch(e){
-
-message(
-"Camera/microphone failed: "+
-e.name+
-". Check Chrome permissions.",
-"bad"
-);
-
-}
-
-}
-
-
-function shuffle(a){
-
-a=[...a];
-
-for(
-let i=a.length-
+</
