@@ -119,3 +119,103 @@ button:active{
 
 <div class="subtitle">
 BUA
+
+  </div>
+
+<label>Student ID</label>
+<input id="studentID" type="text" placeholder="Enter student ID">
+
+<label>English Name</label>
+<input id="studentName" type="text" placeholder="Enter English name">
+
+<button type="button" onclick="testMedia()">
+TEST CAMERA &amp; MICROPHONE
+</button>
+
+<div id="status" class="status">
+Enter your details, then press the test button.
+</div>
+
+<div id="cameraBox">
+<video id="camera" autoplay muted playsinline></video>
+</div>
+
+</div>
+</main>
+
+<script>
+
+let stream = null;
+
+async function testMedia(){
+
+const status =
+document.getElementById("status");
+
+const id =
+document.getElementById("studentID").value.trim();
+
+const name =
+document.getElementById("studentName").value.trim();
+
+if(!id || !name){
+
+status.textContent =
+"Please enter Student ID and English Name first.";
+
+status.className =
+"status error";
+
+return;
+
+}
+
+status.textContent =
+"Button works ✓ Requesting camera and microphone...";
+
+try{
+
+stream =
+await navigator.mediaDevices.getUserMedia({
+video:{facingMode:"user"},
+audio:true
+});
+
+const camera =
+document.getElementById("camera");
+
+camera.srcObject =
+stream;
+
+document
+.getElementById("cameraBox")
+.style.display =
+"block";
+
+await camera.play();
+
+status.textContent =
+"✓ Camera working — ✓ Microphone connected";
+
+status.className =
+"status ready";
+
+}catch(error){
+
+status.textContent =
+"Camera/microphone failed: " +
+error.name +
+" — " +
+error.message;
+
+status.className =
+"status error";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
