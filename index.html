@@ -137,7 +137,31 @@ Enter your details, then press the test button.
 </div>
 
 <div id="cameraBox">
+
 <video id="camera" autoplay muted playsinline></video>
+
+<div style="margin-top:14px;font-weight:bold">
+🎤 Microphone
+</div>
+
+<div style="height:24px;background:#ddd;border-radius:12px;overflow:hidden;margin-top:8px">
+<div id="micLevel"
+style="height:100%;width:0%;background:#171717;transition:width .08s">
+</div>
+</div>
+
+<div id="micText" style="margin-top:7px">
+Speak normally — the bar should move.
+</div>
+
+<button
+id="startBtn"
+type="button"
+style="display:none"
+onclick="startTest()">
+START TEST
+</button>
+
 </div>
 
 </div>
@@ -145,77 +169,70 @@ Enter your details, then press the test button.
 
 <script>
 
-let stream = null;
+let stream=null;
+let audioContext=null;
+let analyser=null;
+let animation=null;
 
 async function testMedia(){
 
-const status =
-document.getElementById("status");
+const status=document.getElementById("status");
 
-const id =
+const id=
 document.getElementById("studentID").value.trim();
 
-const name =
+const name=
 document.getElementById("studentName").value.trim();
 
 if(!id || !name){
 
-status.textContent =
+status.textContent=
 "Please enter Student ID and English Name first.";
 
-status.className =
-"status error";
+status.className="status error";
 
 return;
 
 }
 
-status.textContent =
-"Button works ✓ Requesting camera and microphone...";
+status.textContent=
+"Requesting camera and microphone...";
 
 try{
 
-stream =
+stream=
 await navigator.mediaDevices.getUserMedia({
 video:{facingMode:"user"},
 audio:true
 });
 
-const camera =
+
+/* CAMERA */
+
+const camera=
 document.getElementById("camera");
 
-camera.srcObject =
-stream;
+camera.srcObject=stream;
 
-document
-.getElementById("cameraBox")
-.style.display =
-"block";
+document.getElementById("cameraBox")
+.style.display="block";
 
 await camera.play();
 
-status.textContent =
-"✓ Camera working — ✓ Microphone connected";
 
-status.className =
-"status ready";
+/* MICROPHONE READER */
 
-}catch(error){
+const AudioCtx=
+window.AudioContext ||
+window.webkitAudioContext;
 
-status.textContent =
-"Camera/microphone failed: " +
-error.name +
-" — " +
-error.message;
+audioContext=
+new AudioCtx();
 
-status.className =
-"status error";
+const source=
+audioContext.createMediaStreamSource(stream);
 
-}
+analyser=
+audioContext.createAnalyser();
 
-}
-
-</script>
-
-</body>
-</html>
+an
