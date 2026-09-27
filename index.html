@@ -1,5 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-...
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kiwi Vocab — BUA M1.2</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f3ef;
+    color: #171717;
+}
+
+.container {
+    max-width: 650px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 22px;
+    padding: 26px;
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 40px;
+    margin: 0 0 10px;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    font-size: 19px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    font-size: 20px;
+    border-radius: 12px;
+    border: 1px solid #aaa;
+}
+
+button, .downloadLink {
+    width: 100%;
+    display: block;
+    padding: 17px;
+    margin-top: 18px;
+    font-size: 19px;
+    font-weight: bold;
+    border: 0;
+    border-radius: 14px;
+    background: #111;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+button:disabled {
+    background: #aaa;
+    color: #eee;
+    cursor: not-allowed;
+}
+
+.secondary {
+    background: #555;
+}
+
+.nextButton {
+    font-size: 23px;
+    padding: 20px;
+}
+
+video {
+    width: 100%;
+    border-radius: 16px;
+    background: black;
+    margin-top: 15px;
+}
+
+.word {
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    margin: 28px 0 15px;
+}
+
+.timer {
+    text-align: center;
+    font-size: 60px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.status {
+    text-align: center;
+    font-size: 21px;
+    margin: 15px;
+}
+
+.instructions {
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.message {
+   
