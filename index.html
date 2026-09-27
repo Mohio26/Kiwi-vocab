@@ -1,126 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kiwi Vocab</title>
 
 <style>
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  background:#f3f4f0;
-  font-family:Arial,sans-serif;
-  color:#171717;
-}
-
-main{
-  max-width:600px;
-  margin:auto;
-  padding:20px;
-}
-
-.card{
-  background:white;
-  padding:24px;
-  border-radius:20px;
-  margin-top:20px;
-}
-
-h1{
-  margin:0 0 5px;
-  font-size:38px;
-}
-
-.subtitle{
-  color:#666;
-  margin-bottom:25px;
-}
-
-label{
-  display:block;
-  font-weight:bold;
-  margin-top:18px;
-  margin-bottom:7px;
-}
-
-input{
-  width:100%;
-  padding:15px;
-  font-size:18px;
-  border:1px solid #aaa;
-  border-radius:10px;
-}
-
-button{
-  width:100%;
-  padding:17px;
-  margin-top:20px;
-  border:0;
-  border-radius:12px;
-  background:#171717;
-  color:white;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-button:active{
-  background:#444;
-}
-
-#status{
-  margin-top:15px;
-  padding:12px;
-  background:#eeeeee;
-  border-radius:10px;
-  line-height:1.4;
-}
-
-#cameraBox{
-  display:none;
-  margin-top:18px;
-}
-
-#camera{
-  display:block;
-  width:100%;
-  max-height:300px;
-  object-fit:cover;
-  background:black;
-  border-radius:15px;
-}
-
-.ready{
-  background:#e5f5e7 !important;
-}
-
-.error{
-  background:#ffe2e2 !important;
-}
-
+*{box-sizing:border-box}
+body{margin:0;background:#f3f4f0;font-family:Arial,sans-serif;color:#171717}
+main{max-width:600px;margin:auto;padding:20px}
+.card{background:#fff;padding:25px;border-radius:22px;margin-top:20px}
+h1{font-size:38px;margin:0 0 5px}
+.sub{font-size:18px;color:#666;margin-bottom:22px}
+label{display:block;font-weight:bold;margin-top:16px}
+input{width:100%;padding:14px;margin-top:6px;font-size:18px;border:1px solid #aaa;border-radius:10px}
+button,a.save{width:100%;display:block;padding:17px;margin-top:18px;border:0;border-radius:12px;background:#171717;color:#fff;font-size:18px;font-weight:bold;text-align:center;text-decoration:none}
+.status{padding:12px;margin-top:15px;background:#eee;border-radius:10px}
+video{width:100%;max-height:300px;object-fit:cover;margin-top:15px;border-radius:15px;background:#000}
+.word{text-align:center;font-size:40px;font-weight:bold;margin:28px 0 15px}
+.timer{text-align:center;font-size:60px;font-weight:bold}
+.center{text-align:center;line-height:1.5}
+.hidden{display:none}
+.good{background:#e5f5e7}
+.error{background:#ffe2e2}
 </style>
 </head>
 
-
 <body>
-
 <main>
 
-<div class="card">
+<!-- SETUP -->
+<section id="setup" class="card">
 
 <h1>🥝 Kiwi Vocab</h1>
-
-<div class="subtitle">
-BUA
-
-  </div>
+<div class="sub">BUA Vocabulary Speaking Assessment</div>
 
 <label>Student ID</label>
 <input id="studentID" type="text" placeholder="Enter student ID">
@@ -128,111 +41,284 @@ BUA
 <label>English Name</label>
 <input id="studentName" type="text" placeholder="Enter English name">
 
-<button type="button" onclick="testMedia()">
+<button type="button" id="testBtn">
 TEST CAMERA &amp; MICROPHONE
 </button>
 
 <div id="status" class="status">
-Enter your details, then press the test button.
+Enter your details, then test your camera and microphone.
 </div>
 
-<div id="cameraBox">
+<video id="camera" class="hidden" autoplay muted playsinline></video>
 
-<video id="camera" autoplay muted playsinline></video>
-
-<div style="margin-top:14px;font-weight:bold">
-🎤 Microphone
-</div>
-
-<div style="height:24px;background:#ddd;border-radius:12px;overflow:hidden;margin-top:8px">
-<div id="micLevel"
-style="height:100%;width:0%;background:#171717;transition:width .08s">
-</div>
-</div>
-
-<div id="micText" style="margin-top:7px">
-Speak normally — the bar should move.
-</div>
-
-<button
-id="startBtn"
-type="button"
-style="display:none"
-onclick="startTest()">
+<button type="button" id="startBtn" class="hidden">
 START TEST
 </button>
 
+</section>
+
+
+<!-- ASSESSMENT -->
+<section id="test" class="card hidden">
+
+<div id="progress" class="center"></div>
+
+<video id="testVideo" autoplay muted playsinline></video>
+
+<div id="word" class="word"></div>
+
+<div id="timer" class="timer"></div>
+
+<div class="center">
+Say the word.<br>
+Explain its meaning in English.<br>
+Give an original example sentence.
 </div>
 
+</section>
+
+
+<!-- FINISHED -->
+<section id="done" class="card hidden">
+
+<h1>Good job! 🥝</h1>
+
+<h2>Assessment complete.</h2>
+
+<div id="doneStatus" class="status good">
+Preparing your recording...
 </div>
+
+<video id="savedVideo" class="hidden" controls playsinline></video>
+
+<a id="saveLink" class="save hidden">
+SAVE RECORDING
+</a>
+
+<button onclick="location.reload()">
+START AGAIN
+</button>
+
+</section>
+
 </main>
+
 
 <script>
 
-let stream=null;
-let audioContext=null;
-let analyser=null;
-let animation=null;
+const WORDS=[
+"deglaciation",
+"projection",
+"interglacial period",
+"invasive species",
+"magnitude",
+"haptics",
+"cognitive",
+"perceptual",
+"diagnostic",
+"climate change",
+"global warming",
+"greenhouse gases",
+"carbon dioxide",
+"emissions",
+"ecosystem",
+"biodiversity",
+"extinction",
+"habitat",
+"adaptation",
+"consumer",
+"marketing",
+"interaction",
+"communication"
+];
 
-async function testMedia(){
+const QUESTION_COUNT=2;
+const ANSWER_TIME=15;
+
+let stream=null;
+let recorder=null;
+let chunks=[];
+let questions=[];
+let question=0;
+let timer=null;
+
+
+/* CAMERA + MICROPHONE */
+
+document.getElementById("testBtn").onclick=async function(){
 
 const status=document.getElementById("status");
 
-const id=
-document.getElementById("studentID").value.trim();
-
-const name=
-document.getElementById("studentName").value.trim();
+const id=document.getElementById("studentID").value.trim();
+const name=document.getElementById("studentName").value.trim();
 
 if(!id || !name){
-
-status.textContent=
-"Please enter Student ID and English Name first.";
-
+status.textContent="Please enter Student ID and English Name first.";
 status.className="status error";
-
 return;
-
 }
 
-status.textContent=
-"Requesting camera and microphone...";
+status.textContent="Requesting camera and microphone...";
 
 try{
 
-stream=
-await navigator.mediaDevices.getUserMedia({
+stream=await navigator.mediaDevices.getUserMedia({
 video:{facingMode:"user"},
 audio:true
 });
 
-
-/* CAMERA */
-
-const camera=
-document.getElementById("camera");
+const camera=document.getElementById("camera");
 
 camera.srcObject=stream;
-
-document.getElementById("cameraBox")
-.style.display="block";
+camera.classList.remove("hidden");
 
 await camera.play();
 
+document.getElementById("startBtn").classList.remove("hidden");
 
-/* MICROPHONE READER */
+status.textContent="✓ Camera working — ✓ Microphone connected";
+status.className="status good";
 
-const AudioCtx=
-window.AudioContext ||
-window.webkitAudioContext;
+}catch(error){
 
-audioContext=
-new AudioCtx();
+status.textContent="Camera/microphone failed: "+error.name+" — "+error.message;
+status.className="status error";
 
-const source=
-audioContext.createMediaStreamSource(stream);
+}
 
-analyser=
-audioContext.createAnalyser();
+};
 
-an
+
+/* START TEST */
+
+document.getElementById("startBtn").onclick=function(){
+
+if(!stream){
+alert("Test the camera and microphone first.");
+return;
+}
+
+questions=[...WORDS]
+.sort(()=>Math.random()-.5)
+.slice(0,QUESTION_COUNT);
+
+question=0;
+chunks=[];
+
+document.getElementById("setup").classList.add("hidden");
+document.getElementById("test").classList.remove("hidden");
+
+document.getElementById("testVideo").srcObject=stream;
+
+try{
+
+recorder=new MediaRecorder(stream);
+
+recorder.ondataavailable=function(e){
+if(e.data.size>0)chunks.push(e.data);
+};
+
+recorder.start(1000);
+
+showQuestion();
+
+}catch(error){
+
+alert("Recording could not start: "+error.message);
+
+}
+
+};
+
+
+/* QUESTIONS */
+
+function showQuestion(){
+
+if(question>=questions.length){
+finishTest();
+return;
+}
+
+document.getElementById("progress").textContent=
+"Question "+(question+1)+" of "+questions.length;
+
+document.getElementById("word").textContent=
+questions[question];
+
+let seconds=ANSWER_TIME;
+
+document.getElementById("timer").textContent=seconds;
+
+clearInterval(timer);
+
+timer=setInterval(function(){
+
+seconds--;
+
+document.getElementById("timer").textContent=
+Math.max(seconds,0);
+
+if(seconds<=0){
+
+clearInterval(timer);
+
+question++;
+
+showQuestion();
+
+}
+
+},1000);
+
+}
+
+
+/* FINISH */
+
+function finishTest(){
+
+clearInterval(timer);
+
+document.getElementById("test").classList.add("hidden");
+document.getElementById("done").classList.remove("hidden");
+
+recorder.onstop=function(){
+
+const type=recorder.mimeType || "video/webm";
+
+const blob=new Blob(chunks,{type:type});
+
+const url=URL.createObjectURL(blob);
+
+const video=document.getElementById("savedVideo");
+
+video.src=url;
+video.classList.remove("hidden");
+
+const id=document.getElementById("studentID").value.trim();
+const name=document.getElementById("studentName").value.trim();
+
+const link=document.getElementById("saveLink");
+
+link.href=url;
+link.download="KiwiVocab_"+id+"_"+name+".webm";
+link.classList.remove("hidden");
+
+document.getElementById("doneStatus").textContent=
+"✓ Recording ready. Check the video and save it.";
+
+};
+
+recorder.stop();
+
+stream.getTracks().forEach(function(track){
+track.stop();
+});
+
+}
+
+</script>
+
+</body>
+</html>
