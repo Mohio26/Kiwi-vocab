@@ -1,399 +1,1909 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover">
+
 <title>Kiwi Vocab</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#f3f4f0;font-family:Arial,sans-serif;color:#171717}
-main{max-width:600px;margin:auto;padding:20px}
-.card{background:#fff;padding:25px;border-radius:22px;margin-top:20px}
-h1{font-size:38px;margin:0 0 5px}
-h2{margin-top:8px}
-.sub{font-size:18px;color:#666;margin-bottom:22px}
-label{display:block;font-weight:bold;margin-top:16px}
-input{width:100%;padding:14px;margin-top:6px;font-size:18px;border:1px solid #aaa;border-radius:10px}
-button,a.save{width:100%;display:block;padding:17px;margin-top:18px;border:0;border-radius:12px;background:#171717;color:#fff;font-size:18px;font-weight:bold;text-align:center;text-decoration:none}
-button:disabled{opacity:.35}
-.greenBtn{background:#16833b}
-.status{padding:12px;margin-top:15px;background:#eee;border-radius:10px}
-.good{background:#e5f5e7}
-.error{background:#ffe2e2}
-video{width:100%;max-height:300px;object-fit:cover;margin-top:15px;border-radius:15px;background:#000}
-.hidden{display:none}
-.center{text-align:center;line-height:1.5}
-.word{text-align:center;font-size:42px;font-weight:bold;margin:24px 0 10px;overflow-wrap:anywhere}
-.timer{text-align:center;font-size:48px;font-weight:bold;margin:8px 0}
-.instructions{margin-top:18px;padding:15px;background:#f2f3ef;border-radius:15px}
-.instruction{padding:10px 0;font-size:18px;font-weight:bold}
-.note{font-size:15px;color:#666;line-height:1.5}
-.ratingBox{margin-top:18px;padding:14px;background:#f2f3ef;border-radius:14px;text-align:center}
-.ratingButtons{display:flex;gap:8px;margin-top:10px}
-.ratingButtons button{margin:0;padding:13px 5px;font-size:15px}
-#ratingStatus{margin-top:9px;font-weight:bold}
-.briefList{line-height:1.7;font-size:18px;padding-left:22px}
-.bigCheck{font-size:48px;text-align:center;margin-top:5px}
-.summary{margin-top:15px;line-height:1.6}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:#f3f4f0;
+font-family:Arial,sans-serif;
+color:#171717;
+}
+
+main{
+max-width:600px;
+margin:auto;
+padding:14px;
+}
+
+.card{
+background:#fff;
+padding:22px;
+border-radius:20px;
+margin-top:14px;
+}
+
+h1{
+font-size:36px;
+margin:0 0 5px;
+}
+
+h2{
+margin-top:8px;
+}
+
+.sub{
+font-size:18px;
+color:#666;
+margin-bottom:20px;
+}
+
+label{
+display:block;
+font-weight:bold;
+margin-top:16px;
+}
+
+input{
+width:100%;
+padding:14px;
+margin-top:6px;
+font-size:18px;
+border:1px solid #aaa;
+border-radius:10px;
+}
+
+button,
+a.save{
+width:100%;
+display:block;
+padding:16px;
+margin-top:16px;
+border:0;
+border-radius:12px;
+background:#171717;
+color:#fff;
+font-size:17px;
+font-weight:bold;
+text-align:center;
+text-decoration:none;
+}
+
+button:disabled{
+opacity:.45;
+}
+
+.green{
+background:#16833b;
+}
+
+.status{
+padding:12px;
+margin-top:14px;
+background:#eee;
+border-radius:10px;
+}
+
+.good{
+background:#e5f5e7;
+}
+
+.error{
+background:#ffe2e2;
+}
+
+video{
+width:100%;
+object-fit:cover;
+border-radius:14px;
+background:#000;
+}
+
+.hidden{
+display:none !important;
+}
+
+.center{
+text-align:center;
+}
+
+.check{
+font-size:48px;
+text-align:center;
+}
+
+.brief{
+font-size:17px;
+line-height:1.65;
+padding-left:22px;
+}
+
+.note{
+font-size:14px;
+line-height:1.5;
+color:#666;
+text-align:center;
+}
+
+
+/* =========================
+   COMPACT TEST SCREEN
+========================= */
+
+#test{
+padding:10px;
+margin-top:5px;
+min-height:calc(100dvh - 10px);
+}
+
+#progress{
+font-size:13px;
+font-weight:bold;
+margin-bottom:4px;
+}
+
+#testVideo{
+height:24vh;
+max-height:190px;
+min-height:120px;
+margin:0;
+}
+
+.rating{
+margin-top:5px;
+padding:7px;
+background:#f2f3ef;
+border-radius:10px;
+text-align:center;
+}
+
+.ratingTitle{
+font-size:12px;
+font-weight:bold;
+}
+
+.ratingButtons{
+display:flex;
+gap:6px;
+margin-top:5px;
+}
+
+.ratingButtons button{
+flex:1;
+margin:0;
+padding:10px 3px;
+font-size:13px;
+border-radius:9px;
+}
+
+#easyBtn{
+background:#219653;
+}
+
+#mediumBtn{
+background:#f2994a;
+}
+
+#hardBtn{
+background:#d64545;
+}
+
+#ratingStatus{
+font-size:11px;
+margin-top:4px;
+font-weight:bold;
+}
+
+.ratingReady{
+box-shadow:0 0 0 3px #171717;
+}
+
+.word{
+text-align:center;
+font-size:31px;
+font-weight:bold;
+line-height:1.1;
+margin:8px 0 2px;
+overflow-wrap:anywhere;
+}
+
+.timer{
+text-align:center;
+font-size:31px;
+font-weight:bold;
+margin:2px 0;
+}
+
+#responseStatus{
+font-size:12px;
+text-align:center;
+margin:2px 0 4px;
+}
+
+.instructions{
+background:#f2f3ef;
+border-radius:10px;
+padding:6px 9px;
+margin-top:4px;
+}
+
+.instruction{
+font-size:13px;
+font-weight:bold;
+padding:3px 0;
+}
+
+
+/* EXTRA COMPACT FOR SMALL PHONES */
+
+@media(max-height:700px){
+
+main{
+padding:6px;
+}
+
+#test{
+padding:7px;
+}
+
+#testVideo{
+height:20vh;
+min-height:100px;
+}
+
+.word{
+font-size:27px;
+margin:5px 0 1px;
+}
+
+.timer{
+font-size:27px;
+}
+
+.instruction{
+font-size:12px;
+padding:2px 0;
+}
+
+.ratingButtons button{
+padding:8px 2px;
+}
+
+}
+
 </style>
+
 </head>
+
+
 <body>
+
 <main>
 
-<section id="setup" class="card">
+
+<!-- =========================
+     SETUP
+========================= -->
+
+<section
+id="setup"
+class="card">
+
 <h1>🥝 Kiwi Vocab</h1>
-<div class="sub">BUA Vocabulary Speaking Assessment</div>
-<label>Student ID</label>
-<input id="studentID" type="text" placeholder="Enter student ID">
-<label>English Name</label>
-<input id="studentName" type="text" placeholder="Enter English name">
-<button type="button" id="testBtn">TEST CAMERA &amp; MICROPHONE</button>
-<div id="status" class="status">Enter your details, then test your camera and microphone.</div>
-<video id="camera" class="hidden" autoplay muted playsinline></video>
-<button type="button" id="startBtn" class="hidden">START TEST</button>
+
+<div class="sub">
+BUA Vocabulary Speaking Assessment
+</div>
+
+
+<label>
+Student ID
+</label>
+
+<input
+id="studentID"
+type="text"
+placeholder="Enter student ID">
+
+
+<label>
+English Name
+</label>
+
+<input
+id="studentName"
+type="text"
+placeholder="Enter English name">
+
+
+<button
+id="testBtn"
+type="button">
+
+TEST CAMERA &amp; MICROPHONE
+
+</button>
+
+
+<div
+id="status"
+class="status">
+
+Enter your details, then test your camera and microphone.
+
+</div>
+
+
+<video
+id="camera"
+class="hidden"
+autoplay
+muted
+playsinline>
+</video>
+
+
+<button
+id="startBtn"
+type="button"
+class="hidden">
+
+START TEST
+
+</button>
+
 </section>
 
-<section id="briefing" class="card hidden">
-<div class="bigCheck">✓</div>
-<h1 class="center">Vocabulary Test Instructions</h1>
-<div id="briefIntro" class="status good"></div>
-<ul class="briefList">
-<li>You have <strong>20 seconds</strong> for each vocabulary word.</li>
-<li><strong>1. Pronounce</strong> the word clearly — about 4 seconds.</li>
-<li><strong>2. Define</strong> the word in English — about 6 seconds.</li>
-<li><strong>3. Give an example sentence</strong> using the word — about 10 seconds.</li>
-<li>After each word, rate it <strong>Easy, Medium, or Hard</strong>.</li>
-<li>You then get a short 3-second breather before the next word.</li>
-<li>The assessment is recorded as <strong>one continuous video</strong>.</li>
+
+
+<!-- =========================
+     INSTRUCTIONS
+========================= -->
+
+<section
+id="briefing"
+class="card hidden">
+
+<div class="check">
+✓
+</div>
+
+<h1 class="center">
+Vocabulary Test
+</h1>
+
+
+<div
+id="testInfo"
+class="status good">
+</div>
+
+
+<ul class="brief">
+
+<li>
+You have <strong>20 seconds</strong> for each vocabulary word.
+</li>
+
+<li>
+<strong>1. Pronounce the word</strong> clearly — about 4 seconds.
+</li>
+
+<li>
+<strong>2. Give the definition</strong> in English — about 6 seconds.
+</li>
+
+<li>
+<strong>3. Give an example sentence</strong> using the word — about 10 seconds.
+</li>
+
+<li>
+After each word, choose
+<strong>Easy, Medium, or Hard</strong>.
+</li>
+
+<li>
+You will have a short
+<strong>3-second break</strong>
+before the next word.
+</li>
+
+<li>
+The entire assessment is recorded as
+<strong>one continuous video</strong>.
+</li>
+
 </ul>
-<div class="note center">The timer counts up from 0 to 20 seconds. Complete all three parts naturally within the 20 seconds.</div>
-<button type="button" id="understandBtn" class="greenBtn">✓ I UNDERSTAND — CONTINUE ➜</button>
+
+
+<div class="note">
+
+The timer counts from 0 to 20 seconds.
+Complete all three parts naturally within the time.
+
+</div>
+
+
+<button
+id="understandBtn"
+type="button"
+class="green">
+
+✓ I UNDERSTAND — CONTINUE ➜
+
+</button>
+
 </section>
 
-<section id="test" class="card hidden">
-<div id="progress" class="center"></div>
-<video id="testVideo" autoplay muted playsinline></video>
-<div id="word" class="word"></div>
-<div id="timer" class="timer">0 / 20 sec</div>
-<div id="responseStatus" class="center">Complete all three parts.</div>
+
+
+<!-- =========================
+     ASSESSMENT
+========================= -->
+
+<section
+id="test"
+class="card hidden">
+
+
+<div
+id="progress"
+class="center">
+
+Question 1
+
+</div>
+
+
+<video
+id="testVideo"
+autoplay
+muted
+playsinline>
+</video>
+
+
+<!-- SMALL RATING PANEL -->
+
+<div
+id="ratingBox"
+class="rating">
+
+<div class="ratingTitle">
+How difficult was this word?
+</div>
+
+
+<div class="ratingButtons">
+
+<button
+id="easyBtn"
+type="button"
+disabled>
+
+EASY
+
+</button>
+
+
+<button
+id="mediumBtn"
+type="button"
+disabled>
+
+MEDIUM
+
+</button>
+
+
+<button
+id="hardBtn"
+type="button"
+disabled>
+
+HARD
+
+</button>
+
+</div>
+
+
+<div id="ratingStatus">
+
+Finish your answer first.
+
+</div>
+
+</div>
+
+
+<!-- WORD -->
+
+<div
+id="word"
+class="word">
+</div>
+
+
+<!-- TIMER -->
+
+<div
+id="timer"
+class="timer">
+
+0 / 20 sec
+
+</div>
+
+
+<div
+id="responseStatus">
+
+Complete all three parts.
+
+</div>
+
+
+<!-- PERMANENT INSTRUCTIONS -->
 
 <div class="instructions">
-<div class="instruction">1. Pronounce the word clearly.</div>
-<div class="instruction">2. Give the definition in English.</div>
-<div class="instruction">3. Give an example sentence using the word.</div>
+
+<div class="instruction">
+1. Pronounce the word.
 </div>
 
-<div class="ratingBox">
-<strong>How difficult was this word?</strong>
-<div class="ratingButtons">
-<button id="easyBtn" type="button" disabled>EASY</button>
-<button id="mediumBtn" type="button" disabled>MEDIUM</button>
-<button id="hardBtn" type="button" disabled>HARD</button>
+<div class="instruction">
+2. Give the definition.
 </div>
-<div id="ratingStatus">Finish your 20-second response first.</div>
+
+<div class="instruction">
+3. Give an example sentence.
 </div>
+
+</div>
+
+
 </section>
 
-<section id="done" class="card hidden">
-<h1>Good job! 🥝</h1>
-<h2>Assessment complete.</h2>
-<div id="doneStatus" class="status good">Preparing your recording...</div>
-<video id="savedVideo" class="hidden" controls playsinline></video>
-<a id="saveLink" class="save hidden">SAVE RECORDING</a>
-<div id="ratingSummary" class="summary"></div>
-<a id="ratingLink" class="save hidden">SAVE SELF-RATINGS</a>
-<button type="button" onclick="location.reload()">START AGAIN</button>
+
+
+<!-- =========================
+     COMPLETE
+========================= -->
+
+<section
+id="done"
+class="card hidden">
+
+
+<h1>
+Good job! 🥝
+</h1>
+
+
+<h2>
+Assessment complete.
+</h2>
+
+
+<div
+id="doneStatus"
+class="status good">
+
+Preparing your recording...
+
+</div>
+
+
+<video
+id="savedVideo"
+class="hidden"
+controls
+playsinline>
+</video>
+
+
+<a
+id="saveLink"
+class="save hidden">
+
+SAVE RECORDING
+
+</a>
+
+
+<div
+id="ratingSummary"
+class="status hidden">
+</div>
+
+
+<a
+id="ratingLink"
+class="save hidden">
+
+SAVE SELF-RATINGS
+
+</a>
+
+
+<button
+type="button"
+onclick="location.reload()">
+
+START AGAIN
+
+</button>
+
+
 </section>
+
 
 </main>
 
+
+
 <script>
-const TEST_CONFIG={questionCount:2,responseSeconds:20,breakSeconds:3};
+
+
+/* ==========================================
+   KIWI VOCAB TEST SETTINGS
+
+   2 words = testing mode.
+
+   Later Teacher Mode can dynamically change
+   questionCount to 10, 20, 25, 30, 40 etc.
+========================================== */
+
+
+const TEST_CONFIG={
+
+questionCount:2,
+
+responseSeconds:20,
+
+breakSeconds:3
+
+};
+
+
+
+/* ==========================================
+   VOCABULARY BANK
+========================================== */
+
 
 const WORDS=[
-"deglaciation","projection","interglacial period","invasive species",
-"magnitude","haptics","cognitive","perceptual","diagnostic","climate change",
-"global warming","greenhouse gases","carbon dioxide","emissions","ecosystem",
-"biodiversity","extinction","habitat","adaptation","consumer","marketing",
-"interaction","communication"
+
+"deglaciation",
+
+"projection",
+
+"interglacial period",
+
+"invasive species",
+
+"magnitude",
+
+"haptics",
+
+"cognitive",
+
+"perceptual",
+
+"diagnostic",
+
+"climate change",
+
+"global warming",
+
+"greenhouse gases",
+
+"carbon dioxide",
+
+"emissions",
+
+"ecosystem",
+
+"biodiversity",
+
+"extinction",
+
+"habitat",
+
+"adaptation",
+
+"consumer",
+
+"marketing",
+
+"interaction",
+
+"communication"
+
 ];
 
+
+
+/* ==========================================
+   VARIABLES
+========================================== */
+
+
 let stream=null;
+
 let recorder=null;
+
 let chunks=[];
+
 let questions=[];
+
 let questionIndex=0;
+
 let responseTimer=null;
+
 let breakTimer=null;
+
 let ratings=[];
+
 let waitingForRating=false;
 
-document.getElementById("testBtn").onclick=async function(){
-const status=document.getElementById("status");
-const id=document.getElementById("studentID").value.trim();
-const name=document.getElementById("studentName").value.trim();
 
-if(!id || !name){
-status.textContent="Please enter Student ID and English Name first.";
-status.className="status error";
+
+/* ==========================================
+   CAMERA + MICROPHONE TEST
+========================================== */
+
+
+document
+.getElementById("testBtn")
+.onclick=
+async function(){
+
+
+const status=
+document.getElementById("status");
+
+
+const studentID=
+document
+.getElementById("studentID")
+.value
+.trim();
+
+
+const studentName=
+document
+.getElementById("studentName")
+.value
+.trim();
+
+
+if(
+!studentID ||
+!studentName
+){
+
+status.textContent=
+"Please enter Student ID and English Name first.";
+
+
+status.className=
+"status error";
+
+
 return;
+
 }
 
-status.textContent="Requesting camera and microphone...";
+
+status.textContent=
+"Requesting camera and microphone...";
+
 
 try{
-stream=await navigator.mediaDevices.getUserMedia({
-video:{facingMode:"user"},
+
+
+stream=
+await navigator.mediaDevices.getUserMedia({
+
+video:{
+facingMode:"user"
+},
+
 audio:true
+
 });
 
-const camera=document.getElementById("camera");
-camera.srcObject=stream;
-camera.classList.remove("hidden");
+
+const camera=
+document.getElementById("camera");
+
+
+camera.srcObject=
+stream;
+
+
+camera
+.classList
+.remove("hidden");
+
+
 await camera.play();
 
-document.getElementById("startBtn").classList.remove("hidden");
 
-status.textContent="✓ Camera working — ✓ Microphone connected";
-status.className="status good";
+document
+.getElementById("startBtn")
+.classList
+.remove("hidden");
 
-}catch(error){
-status.textContent="Camera/microphone failed: "+error.name+" — "+error.message;
-status.className="status error";
+
+status.textContent=
+"✓ Camera working — ✓ Microphone connected";
+
+
+status.className=
+"status good";
+
+
 }
+
+
+catch(error){
+
+
+status.textContent=
+
+"Camera/microphone failed: "+
+error.name+
+" — "+
+error.message;
+
+
+status.className=
+"status error";
+
+
+}
+
 };
 
-document.getElementById("startBtn").onclick=function(){
+
+
+/* ==========================================
+   START BUTTON
+========================================== */
+
+
+document
+.getElementById("startBtn")
+.onclick=
+function(){
+
+
 if(!stream){
-alert("Test the camera and microphone first.");
+
+alert(
+"Please test the camera and microphone first."
+);
+
 return;
+
 }
 
-const actualCount=Math.min(TEST_CONFIG.questionCount,WORDS.length);
 
-document.getElementById("briefIntro").innerHTML=
-"<strong>This test contains "+actualCount+" vocabulary words.</strong><br>"+
-"The number of words will automatically reflect the test set by your teacher.";
+const wordCount=
 
-document.getElementById("setup").classList.add("hidden");
-document.getElementById("briefing").classList.remove("hidden");
+Math.min(
+
+TEST_CONFIG.questionCount,
+
+WORDS.length
+
+);
+
+
+document
+.getElementById("testInfo")
+.innerHTML=
+
+"<strong>This test contains "+
+wordCount+
+" vocabulary words.</strong><br>"+
+"The number of words is set by your teacher.";
+
+
+document
+.getElementById("setup")
+.classList
+.add("hidden");
+
+
+document
+.getElementById("briefing")
+.classList
+.remove("hidden");
+
+
 };
 
-document.getElementById("understandBtn").onclick=function(){
-questions=[...WORDS]
-.sort(()=>Math.random()-.5)
-.slice(0,Math.min(TEST_CONFIG.questionCount,WORDS.length));
+
+
+/* ==========================================
+   STUDENT CONFIRMS INSTRUCTIONS
+========================================== */
+
+
+document
+.getElementById("understandBtn")
+.onclick=
+function(){
+
+
+questions=
+
+[...WORDS]
+
+.sort(
+()=>Math.random()-.5
+)
+
+.slice(
+
+0,
+
+Math.min(
+TEST_CONFIG.questionCount,
+WORDS.length
+)
+
+);
+
 
 questionIndex=0;
+
 chunks=[];
+
 ratings=[];
 
-document.getElementById("briefing").classList.add("hidden");
-document.getElementById("test").classList.remove("hidden");
-document.getElementById("testVideo").srcObject=stream;
+
+document
+.getElementById("briefing")
+.classList
+.add("hidden");
+
+
+document
+.getElementById("test")
+.classList
+.remove("hidden");
+
+
+document
+.getElementById("testVideo")
+.srcObject=
+stream;
+
+
+/* START ONE CONTINUOUS RECORDING */
+
 
 try{
-recorder=new MediaRecorder(stream);
 
-recorder.ondataavailable=function(event){
-if(event.data && event.data.size>0){
-chunks.push(event.data);
+
+recorder=
+new MediaRecorder(
+stream
+);
+
+
+recorder.ondataavailable=
+function(event){
+
+
+if(
+event.data &&
+event.data.size>0
+){
+
+chunks.push(
+event.data
+);
+
 }
+
+
 };
 
-recorder.start(1000);
+
+recorder.start(
+1000
+);
+
+
 showQuestion();
 
-}catch(error){
-alert("Recording could not start: "+error.message);
+
 }
+
+
+catch(error){
+
+
+alert(
+
+"Recording could not start: "+
+error.message
+
+);
+
+
+}
+
 };
 
+
+
+/* ==========================================
+   SHOW QUESTION
+========================================== */
+
+
 function showQuestion(){
-if(questionIndex>=questions.length){
+
+
+if(
+questionIndex>=
+questions.length
+){
+
 finishTest();
+
 return;
+
 }
+
 
 waitingForRating=false;
 
-document.getElementById("progress").textContent=
-"Question "+(questionIndex+1)+" of "+questions.length;
 
-document.getElementById("word").textContent=questions[questionIndex];
+document
+.getElementById("progress")
+.textContent=
 
-document.getElementById("responseStatus").textContent=
+"Question "+
+(questionIndex+1)+
+" of "+
+questions.length;
+
+
+document
+.getElementById("word")
+.textContent=
+
+questions[
+questionIndex
+];
+
+
+document
+.getElementById("responseStatus")
+.textContent=
+
 "Complete all three parts within 20 seconds.";
 
-document.getElementById("ratingStatus").textContent=
-"Finish your 20-second response first.";
 
-setRatingButtons(false);
-startCountUp();
+document
+.getElementById("ratingStatus")
+.textContent=
+
+"Finish your answer first.";
+
+
+document
+.getElementById("ratingBox")
+.classList
+.remove("ratingReady");
+
+
+enableRatings(
+false
+);
+
+
+startTimer();
+
 }
 
-function startCountUp(){
-clearInterval(responseTimer);
+
+
+/* ==========================================
+   TIMER COUNTS UP 0 → 20
+========================================== */
+
+
+function startTimer(){
+
+
+clearInterval(
+responseTimer
+);
+
 
 let elapsed=0;
 
-document.getElementById("timer").textContent=
-"0 / "+TEST_CONFIG.responseSeconds+" sec";
 
-responseTimer=setInterval(function(){
+document
+.getElementById("timer")
+.textContent=
+
+"0 / "+
+TEST_CONFIG.responseSeconds+
+" sec";
+
+
+responseTimer=
+
+setInterval(
+
+function(){
+
+
 elapsed++;
 
-document.getElementById("timer").textContent=
-Math.min(elapsed,TEST_CONFIG.responseSeconds)+
-" / "+TEST_CONFIG.responseSeconds+" sec";
 
-if(elapsed>=TEST_CONFIG.responseSeconds){
-clearInterval(responseTimer);
+document
+.getElementById("timer")
+.textContent=
+
+Math.min(
+
+elapsed,
+
+TEST_CONFIG.responseSeconds
+
+)+
+
+" / "+
+
+TEST_CONFIG.responseSeconds+
+
+" sec";
+
+
+if(
+elapsed>=
+TEST_CONFIG.responseSeconds
+){
+
+
+clearInterval(
+responseTimer
+);
+
+
 waitingForRating=true;
 
-document.getElementById("responseStatus").textContent="Response complete ✓";
-document.getElementById("ratingStatus").textContent="Now rate this word.";
-setRatingButtons(true);
-}
-},1000);
-}
 
-document.getElementById("easyBtn").onclick=function(){saveRating("Easy");};
-document.getElementById("mediumBtn").onclick=function(){saveRating("Medium");};
-document.getElementById("hardBtn").onclick=function(){saveRating("Hard");};
+document
+.getElementById("responseStatus")
+.textContent=
 
-function setRatingButtons(enabled){
-document.getElementById("easyBtn").disabled=!enabled;
-document.getElementById("mediumBtn").disabled=!enabled;
-document.getElementById("hardBtn").disabled=!enabled;
-}
+"Response complete ✓";
 
-function saveRating(level){
-if(!waitingForRating)return;
 
-waitingForRating=false;
-setRatingButtons(false);
+document
+.getElementById("ratingStatus")
+.textContent=
 
-ratings.push({
-number:questionIndex+1,
-word:questions[questionIndex],
-difficulty:level
-});
+"Choose Easy, Medium, or Hard.";
 
-document.getElementById("ratingStatus").textContent=
-level+" recorded ✓";
 
-nextWordBreak();
+document
+.getElementById("ratingBox")
+.classList
+.add("ratingReady");
+
+
+enableRatings(
+true
+);
+
+
 }
 
-function nextWordBreak(){
-let count=TEST_CONFIG.breakSeconds;
 
-document.getElementById("responseStatus").textContent=
-"Next word in "+count+"…";
+},
 
-document.getElementById("timer").textContent="";
+1000
 
-clearInterval(breakTimer);
+);
 
-breakTimer=setInterval(function(){
-count--;
-
-if(count>0){
-document.getElementById("responseStatus").textContent=
-"Next word in "+count+"…";
-}else{
-clearInterval(breakTimer);
-questionIndex++;
-
-if(questionIndex>=questions.length){
-finishTest();
-}else{
-showQuestion();
-}
-}
-},1000);
 }
 
-function finishTest(){
-clearInterval(responseTimer);
-clearInterval(breakTimer);
 
-document.getElementById("test").classList.add("hidden");
-document.getElementById("done").classList.remove("hidden");
-document.getElementById("doneStatus").textContent="Preparing your recording...";
 
-if(!recorder){
-document.getElementById("doneStatus").textContent="No recording was available.";
-return;
-}
+/* ==========================================
+   RATING BUTTONS
+========================================== */
 
-recorder.onstop=function(){
-const type=recorder.mimeType || "video/webm";
-const blob=new Blob(chunks,{type:type});
-const url=URL.createObjectURL(blob);
 
-const savedVideo=document.getElementById("savedVideo");
-savedVideo.src=url;
-savedVideo.classList.remove("hidden");
+document
+.getElementById("easyBtn")
+.onclick=
+function(){
 
-const studentID=safeName(document.getElementById("studentID").value);
-const studentName=safeName(document.getElementById("studentName").value);
+saveRating(
+"Easy"
+);
 
-let extension="webm";
-if(type.includes("mp4"))extension="mp4";
-
-const saveLink=document.getElementById("saveLink");
-saveLink.href=url;
-saveLink.download="KiwiVocab_"+studentID+"_"+studentName+"."+extension;
-saveLink.classList.remove("hidden");
-
-document.getElementById("doneStatus").textContent=
-"✓ Recording ready. Check the video and save it.";
-
-buildRatingDownload(studentID,studentName);
-
-if(stream){
-stream.getTracks().forEach(function(track){track.stop();});
-}
 };
 
-if(recorder.state!=="inactive"){
-recorder.stop();
-}
+
+document
+.getElementById("mediumBtn")
+.onclick=
+function(){
+
+saveRating(
+"Medium"
+);
+
+};
+
+
+document
+.getElementById("hardBtn")
+.onclick=
+function(){
+
+saveRating(
+"Hard"
+);
+
+};
+
+
+
+function enableRatings(
+enabled
+){
+
+
+document
+.getElementById("easyBtn")
+.disabled=
+!enabled;
+
+
+document
+.getElementById("mediumBtn")
+.disabled=
+!enabled;
+
+
+document
+.getElementById("hardBtn")
+.disabled=
+!enabled;
+
+
 }
 
-function buildRatingDownload(studentID,studentName){
-let csv="Question,Word,Difficulty\n";
 
-ratings.forEach(function(item){
-csv+=item.number+',"'+item.word.replace(/"/g,'""')+'",'+item.difficulty+"\n";
+
+/* ==========================================
+   SAVE STUDENT RATING
+========================================== */
+
+
+function saveRating(
+level
+){
+
+
+if(
+!waitingForRating
+){
+
+return;
+
+}
+
+
+waitingForRating=false;
+
+
+enableRatings(
+false
+);
+
+
+document
+.getElementById("ratingBox")
+.classList
+.remove("ratingReady");
+
+
+ratings.push({
+
+number:
+questionIndex+1,
+
+word:
+questions[
+questionIndex
+],
+
+difficulty:
+level
+
 });
 
-const ratingBlob=new Blob([csv],{type:"text/csv"});
-const ratingURL=URL.createObjectURL(ratingBlob);
 
-const ratingLink=document.getElementById("ratingLink");
-ratingLink.href=ratingURL;
+document
+.getElementById("ratingStatus")
+.textContent=
+
+level+
+" recorded ✓";
+
+
+startBreak();
+
+}
+
+
+
+/* ==========================================
+   3 SECOND BREATHER
+========================================== */
+
+
+function startBreak(){
+
+
+let count=
+TEST_CONFIG.breakSeconds;
+
+
+document
+.getElementById("timer")
+.textContent="";
+
+
+document
+.getElementById("responseStatus")
+.textContent=
+
+"Next word in "+
+count+
+"…";
+
+
+clearInterval(
+breakTimer
+);
+
+
+breakTimer=
+
+setInterval(
+
+function(){
+
+
+count--;
+
+
+if(
+count>0
+){
+
+
+document
+.getElementById("responseStatus")
+.textContent=
+
+"Next word in "+
+count+
+"…";
+
+
+}
+
+
+else{
+
+
+clearInterval(
+breakTimer
+);
+
+
+questionIndex++;
+
+
+if(
+questionIndex>=
+questions.length
+){
+
+
+finishTest();
+
+
+}
+
+
+else{
+
+
+showQuestion();
+
+
+}
+
+
+}
+
+
+},
+
+1000
+
+);
+
+}
+
+
+
+/* ==========================================
+   FINISH TEST
+========================================== */
+
+
+function finishTest(){
+
+
+clearInterval(
+responseTimer
+);
+
+
+clearInterval(
+breakTimer
+);
+
+
+document
+.getElementById("test")
+.classList
+.add("hidden");
+
+
+document
+.getElementById("done")
+.classList
+.remove("hidden");
+
+
+document
+.getElementById("doneStatus")
+.textContent=
+
+"Preparing your recording...";
+
+
+if(
+!recorder
+){
+
+
+document
+.getElementById("doneStatus")
+.textContent=
+
+"No recording was available.";
+
+
+return;
+
+}
+
+
+
+/* WHEN RECORDING STOPS */
+
+
+recorder.onstop=
+function(){
+
+
+const type=
+
+recorder.mimeType ||
+
+"video/webm";
+
+
+const blob=
+
+new Blob(
+
+chunks,
+
+{
+type:type
+}
+
+);
+
+
+const videoURL=
+
+URL.createObjectURL(
+blob
+);
+
+
+
+/* PLAYBACK */
+
+
+const savedVideo=
+
+document
+.getElementById("savedVideo");
+
+
+savedVideo.src=
+videoURL;
+
+
+savedVideo
+.classList
+.remove("hidden");
+
+
+
+/* STUDENT DETAILS */
+
+
+const studentID=
+
+safeName(
+
+document
+.getElementById("studentID")
+.value
+
+);
+
+
+const studentName=
+
+safeName(
+
+document
+.getElementById("studentName")
+.value
+
+);
+
+
+
+/* FILE FORMAT */
+
+
+let extension=
+"webm";
+
+
+if(
+type.includes("mp4")
+){
+
+extension=
+"mp4";
+
+}
+
+
+
+/* SAVE VIDEO */
+
+
+const saveLink=
+
+document
+.getElementById("saveLink");
+
+
+saveLink.href=
+videoURL;
+
+
+saveLink.download=
+
+"KiwiVocab_"+
+studentID+
+"_"+
+studentName+
+"."+
+extension;
+
+
+saveLink
+.classList
+.remove("hidden");
+
+
+document
+.getElementById("doneStatus")
+.textContent=
+
+"✓ Recording ready. Check the video and save it.";
+
+
+
+/* BUILD RATING FILE */
+
+
+makeRatingsFile(
+
+studentID,
+
+studentName
+
+);
+
+
+
+/* STOP CAMERA */
+
+
+if(stream){
+
+
+stream
+.getTracks()
+.forEach(
+
+function(track){
+
+track.stop();
+
+}
+
+);
+
+
+}
+
+
+};
+
+
+
+/* STOP ONE CONTINUOUS RECORDING */
+
+
+if(
+recorder.state!=="inactive"
+){
+
+recorder.stop();
+
+}
+
+
+}
+
+
+
+/* ==========================================
+   CREATE SELF-RATING CSV
+========================================== */
+
+
+function makeRatingsFile(
+
+studentID,
+
+studentName
+
+){
+
+
+let csv=
+
+"Question,Word,Difficulty\n";
+
+
+ratings.forEach(
+
+function(item){
+
+
+csv+=
+
+item.number+
+
+',"'+
+
+item.word.replace(
+
+/"/g,
+
+'""'
+
+)+
+
+'",'+
+
+item.difficulty+
+
+"\n";
+
+
+}
+
+);
+
+
+
+const ratingBlob=
+
+new Blob(
+
+[csv],
+
+{
+type:"text/csv"
+}
+
+);
+
+
+const ratingURL=
+
+URL.createObjectURL(
+ratingBlob
+);
+
+
+const ratingLink=
+
+document
+.getElementById("ratingLink");
+
+
+ratingLink.href=
+ratingURL;
+
+
 ratingLink.download=
-"KiwiVocab_Ratings_"+studentID+"_"+studentName+".csv";
-ratingLink.classList.remove("hidden");
 
-const summary=ratings.map(function(item){
-return item.number+". "+item.word+" — "+item.difficulty;
-}).join("<br>");
+"KiwiVocab_Ratings_"+
+studentID+
+"_"+
+studentName+
+".csv";
 
-document.getElementById("ratingSummary").innerHTML=
-"<strong>Self-ratings</strong><br>"+summary;
+
+ratingLink
+.classList
+.remove("hidden");
+
+
+
+/* DISPLAY RATINGS */
+
+
+const summary=
+
+ratings
+
+.map(
+
+function(item){
+
+
+return (
+
+item.number+
+
+". "+
+
+item.word+
+
+" — "+
+
+item.difficulty
+
+);
+
+
 }
 
-function safeName(text){
-return String(text||"")
+)
+
+.join(
+"<br>"
+);
+
+
+const summaryBox=
+
+document
+.getElementById("ratingSummary");
+
+
+summaryBox.innerHTML=
+
+"<strong>Self-ratings</strong><br>"+
+summary;
+
+
+summaryBox
+.classList
+.remove("hidden");
+
+
+}
+
+
+
+/* ==========================================
+   SAFE FILE NAME
+========================================== */
+
+
+function safeName(
+text
+){
+
+
+return String(
+text || ""
+)
+
 .trim()
-.replace(/[^a-zA-Z0-9_-]/g,"_")
-.slice(0,50);
+
+.replace(
+
+/[^a-zA-Z0-9_-]/g,
+
+"_"
+
+)
+
+.slice(
+0,
+50
+);
+
+
 }
+
+
 </script>
 
 </body>
+
 </html>
