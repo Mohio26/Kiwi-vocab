@@ -27,14 +27,14 @@ color:#171717;
 main{
 max-width:600px;
 margin:auto;
-padding:14px;
+padding:12px;
 }
 
 .card{
 background:#fff;
 padding:22px;
 border-radius:20px;
-margin-top:14px;
+margin-top:12px;
 }
 
 h1{
@@ -84,10 +84,10 @@ text-decoration:none;
 }
 
 button:disabled{
-opacity:.45;
+opacity:.5;
 }
 
-.green{
+.greenContinue{
 background:#16833b;
 }
 
@@ -140,9 +140,9 @@ text-align:center;
 }
 
 
-/* =========================
-   COMPACT TEST SCREEN
-========================= */
+/* ==================================
+   COMPACT ASSESSMENT SCREEN
+================================== */
 
 #test{
 padding:10px;
@@ -159,57 +159,8 @@ margin-bottom:4px;
 #testVideo{
 height:24vh;
 max-height:190px;
-min-height:120px;
+min-height:115px;
 margin:0;
-}
-
-.rating{
-margin-top:5px;
-padding:7px;
-background:#f2f3ef;
-border-radius:10px;
-text-align:center;
-}
-
-.ratingTitle{
-font-size:12px;
-font-weight:bold;
-}
-
-.ratingButtons{
-display:flex;
-gap:6px;
-margin-top:5px;
-}
-
-.ratingButtons button{
-flex:1;
-margin:0;
-padding:10px 3px;
-font-size:13px;
-border-radius:9px;
-}
-
-#easyBtn{
-background:#219653;
-}
-
-#mediumBtn{
-background:#f2994a;
-}
-
-#hardBtn{
-background:#d64545;
-}
-
-#ratingStatus{
-font-size:11px;
-margin-top:4px;
-font-weight:bold;
-}
-
-.ratingReady{
-box-shadow:0 0 0 3px #171717;
 }
 
 .word{
@@ -225,20 +176,102 @@ overflow-wrap:anywhere;
 text-align:center;
 font-size:31px;
 font-weight:bold;
-margin:2px 0;
+margin:3px 0;
 }
 
 #responseStatus{
-font-size:12px;
+font-size:13px;
+font-weight:bold;
 text-align:center;
-margin:2px 0 4px;
+margin:3px 0;
 }
+
+
+/* ==================================
+   DIFFICULTY PANEL
+================================== */
+
+.rating{
+margin-top:6px;
+padding:7px;
+background:#f2f3ef;
+border-radius:10px;
+text-align:center;
+}
+
+.ratingTitle{
+font-size:12px;
+font-weight:bold;
+}
+
+.ratingButtons{
+display:flex;
+gap:6px;
+margin-top:6px;
+}
+
+.ratingButtons button{
+flex:1;
+margin:0;
+padding:11px 2px;
+font-size:13px;
+border-radius:9px;
+color:white;
+}
+
+/* EASY = GREEN */
+
+#easyBtn{
+background:#219653;
+}
+
+/* MEDIUM = ORANGE */
+
+#mediumBtn{
+background:#f2994a;
+}
+
+/* HARD = RED */
+
+#hardBtn{
+background:#d64545;
+}
+
+#easyBtn:disabled{
+background:#219653;
+opacity:.45;
+}
+
+#mediumBtn:disabled{
+background:#f2994a;
+opacity:.45;
+}
+
+#hardBtn:disabled{
+background:#d64545;
+opacity:.45;
+}
+
+#ratingStatus{
+font-size:11px;
+margin-top:5px;
+font-weight:bold;
+}
+
+.ratingReady{
+outline:3px solid #171717;
+}
+
+
+/* ==================================
+   PERMANENT INSTRUCTIONS
+================================== */
 
 .instructions{
 background:#f2f3ef;
 border-radius:10px;
-padding:6px 9px;
-margin-top:4px;
+padding:7px 9px;
+margin-top:5px;
 }
 
 .instruction{
@@ -248,12 +281,14 @@ padding:3px 0;
 }
 
 
-/* EXTRA COMPACT FOR SMALL PHONES */
+/* ==================================
+   SMALL PHONE ADJUSTMENT
+================================== */
 
 @media(max-height:700px){
 
 main{
-padding:6px;
+padding:5px;
 }
 
 #test{
@@ -261,8 +296,8 @@ padding:7px;
 }
 
 #testVideo{
-height:20vh;
-min-height:100px;
+height:19vh;
+min-height:95px;
 }
 
 .word{
@@ -295,15 +330,17 @@ padding:8px 2px;
 <main>
 
 
-<!-- =========================
-     SETUP
-========================= -->
+<!-- ==================================
+     STUDENT SETUP
+================================== -->
 
 <section
 id="setup"
 class="card">
 
-<h1>🥝 Kiwi Vocab</h1>
+<h1>
+🥝 Kiwi Vocab
+</h1>
 
 <div class="sub">
 BUA Vocabulary Speaking Assessment
@@ -370,17 +407,19 @@ START TEST
 
 
 
-<!-- =========================
-     INSTRUCTIONS
-========================= -->
+<!-- ==================================
+     INSTRUCTION SCREEN
+================================== -->
 
 <section
 id="briefing"
 class="card hidden">
 
+
 <div class="check">
 ✓
 </div>
+
 
 <h1 class="center">
 Vocabulary Test
@@ -396,19 +435,24 @@ class="status good">
 <ul class="brief">
 
 <li>
-You have <strong>20 seconds</strong> for each vocabulary word.
+You have
+<strong>20 seconds</strong>
+for each vocabulary word.
 </li>
 
 <li>
-<strong>1. Pronounce the word</strong> clearly — about 4 seconds.
+<strong>1. Pronounce the word</strong>
+clearly — about 4 seconds.
 </li>
 
 <li>
-<strong>2. Give the definition</strong> in English — about 6 seconds.
+<strong>2. Give the definition</strong>
+in English — about 6 seconds.
 </li>
 
 <li>
-<strong>3. Give an example sentence</strong> using the word — about 10 seconds.
+<strong>3. Give an example sentence</strong>
+using the word — about 10 seconds.
 </li>
 
 <li>
@@ -417,13 +461,13 @@ After each word, choose
 </li>
 
 <li>
-You will have a short
+You will then have a short
 <strong>3-second break</strong>
 before the next word.
 </li>
 
 <li>
-The entire assessment is recorded as
+The whole assessment is recorded as
 <strong>one continuous video</strong>.
 </li>
 
@@ -433,7 +477,8 @@ The entire assessment is recorded as
 <div class="note">
 
 The timer counts from 0 to 20 seconds.
-Complete all three parts naturally within the time.
+
+Complete all three parts naturally before the time finishes.
 
 </div>
 
@@ -441,19 +486,20 @@ Complete all three parts naturally within the time.
 <button
 id="understandBtn"
 type="button"
-class="green">
+class="greenContinue">
 
 ✓ I UNDERSTAND — CONTINUE ➜
 
 </button>
 
+
 </section>
 
 
 
-<!-- =========================
-     ASSESSMENT
-========================= -->
+<!-- ==================================
+     ASSESSMENT SCREEN
+================================== -->
 
 <section
 id="test"
@@ -464,7 +510,7 @@ class="card hidden">
 id="progress"
 class="center">
 
-Question 1
+Question 1 of 2
 
 </div>
 
@@ -477,11 +523,13 @@ playsinline>
 </video>
 
 
-<!-- SMALL RATING PANEL -->
+
+<!-- DIFFICULTY BUTTONS -->
 
 <div
 id="ratingBox"
 class="rating">
+
 
 <div class="ratingTitle">
 How difficult was this word?
@@ -489,6 +537,7 @@ How difficult was this word?
 
 
 <div class="ratingButtons">
+
 
 <button
 id="easyBtn"
@@ -519,6 +568,7 @@ HARD
 
 </button>
 
+
 </div>
 
 
@@ -528,10 +578,12 @@ Finish your answer first.
 
 </div>
 
+
 </div>
 
 
-<!-- WORD -->
+
+<!-- VOCABULARY WORD -->
 
 <div
 id="word"
@@ -539,7 +591,8 @@ class="word">
 </div>
 
 
-<!-- TIMER -->
+
+<!-- COUNT-UP TIMER -->
 
 <div
 id="timer"
@@ -558,21 +611,26 @@ Complete all three parts.
 </div>
 
 
+
 <!-- PERMANENT INSTRUCTIONS -->
 
 <div class="instructions">
+
 
 <div class="instruction">
 1. Pronounce the word.
 </div>
 
+
 <div class="instruction">
 2. Give the definition.
 </div>
 
+
 <div class="instruction">
 3. Give an example sentence.
 </div>
+
 
 </div>
 
@@ -581,9 +639,9 @@ Complete all three parts.
 
 
 
-<!-- =========================
-     COMPLETE
-========================= -->
+<!-- ==================================
+     COMPLETE SCREEN
+================================== -->
 
 <section
 id="done"
@@ -661,12 +719,12 @@ START AGAIN
 
 
 /* ==========================================
-   KIWI VOCAB TEST SETTINGS
+   TEST CONFIGURATION
 
-   2 words = testing mode.
+   TESTING MODE = 2 WORDS
 
    Later Teacher Mode can dynamically change
-   questionCount to 10, 20, 25, 30, 40 etc.
+   this number to 10, 20, 25, 30, 40 etc.
 ========================================== */
 
 
@@ -798,6 +856,7 @@ if(
 !studentName
 ){
 
+
 status.textContent=
 "Please enter Student ID and English Name first.";
 
@@ -807,6 +866,7 @@ status.className=
 
 
 return;
+
 
 }
 
@@ -880,12 +940,13 @@ status.className=
 
 }
 
+
 };
 
 
 
 /* ==========================================
-   START BUTTON
+   START TEST
 ========================================== */
 
 
@@ -897,11 +958,14 @@ function(){
 
 if(!stream){
 
+
 alert(
 "Please test the camera and microphone first."
 );
 
+
 return;
+
 
 }
 
@@ -944,7 +1008,7 @@ document
 
 
 /* ==========================================
-   STUDENT CONFIRMS INSTRUCTIONS
+   STUDENT ACCEPTS INSTRUCTIONS
 ========================================== */
 
 
@@ -967,8 +1031,11 @@ questions=
 0,
 
 Math.min(
+
 TEST_CONFIG.questionCount,
+
 WORDS.length
+
 )
 
 );
@@ -999,7 +1066,10 @@ document
 stream;
 
 
-/* START ONE CONTINUOUS RECORDING */
+
+/* ==========================================
+   START ONE CONTINUOUS VIDEO
+========================================== */
 
 
 try{
@@ -1020,9 +1090,11 @@ event.data &&
 event.data.size>0
 ){
 
+
 chunks.push(
 event.data
 );
+
 
 }
 
@@ -1054,12 +1126,13 @@ error.message
 
 }
 
+
 };
 
 
 
 /* ==========================================
-   SHOW QUESTION
+   SHOW VOCABULARY QUESTION
 ========================================== */
 
 
@@ -1071,9 +1144,12 @@ questionIndex>=
 questions.length
 ){
 
+
 finishTest();
 
+
 return;
+
 
 }
 
@@ -1127,12 +1203,13 @@ false
 
 startTimer();
 
+
 }
 
 
 
 /* ==========================================
-   TIMER COUNTS UP 0 → 20
+   20 SECOND COUNT-UP TIMER
 ========================================== */
 
 
@@ -1233,12 +1310,13 @@ true
 
 );
 
+
 }
 
 
 
 /* ==========================================
-   RATING BUTTONS
+   DIFFICULTY BUTTONS
 ========================================== */
 
 
@@ -1247,11 +1325,14 @@ document
 .onclick=
 function(){
 
+
 saveRating(
 "Easy"
 );
 
+
 };
+
 
 
 document
@@ -1259,11 +1340,14 @@ document
 .onclick=
 function(){
 
+
 saveRating(
 "Medium"
 );
 
+
 };
+
 
 
 document
@@ -1271,9 +1355,11 @@ document
 .onclick=
 function(){
 
+
 saveRating(
 "Hard"
 );
+
 
 };
 
@@ -1307,7 +1393,7 @@ document
 
 
 /* ==========================================
-   SAVE STUDENT RATING
+   RECORD STUDENT RATING
 ========================================== */
 
 
@@ -1320,7 +1406,9 @@ if(
 !waitingForRating
 ){
 
+
 return;
+
 
 }
 
@@ -1365,12 +1453,13 @@ level+
 
 startBreak();
 
+
 }
 
 
 
 /* ==========================================
-   3 SECOND BREATHER
+   3 → 2 → 1 BREAK
 ========================================== */
 
 
@@ -1468,6 +1557,7 @@ showQuestion();
 
 );
 
+
 }
 
 
@@ -1523,11 +1613,14 @@ document
 
 return;
 
+
 }
 
 
 
-/* WHEN RECORDING STOPS */
+/* ==========================================
+   PROCESS FINAL VIDEO
+========================================== */
 
 
 recorder.onstop=
@@ -1562,7 +1655,7 @@ blob
 
 
 
-/* PLAYBACK */
+/* PLAYBACK VIDEO */
 
 
 const savedVideo=
@@ -1607,7 +1700,7 @@ document
 
 
 
-/* FILE FORMAT */
+/* VIDEO EXTENSION */
 
 
 let extension=
@@ -1618,8 +1711,10 @@ if(
 type.includes("mp4")
 ){
 
+
 extension=
 "mp4";
+
 
 }
 
@@ -1661,7 +1756,7 @@ document
 
 
 
-/* BUILD RATING FILE */
+/* CREATE RATING FILE */
 
 
 makeRatingsFile(
@@ -1674,7 +1769,7 @@ studentName
 
 
 
-/* STOP CAMERA */
+/* STOP CAMERA + MICROPHONE */
 
 
 if(stream){
@@ -1686,7 +1781,9 @@ stream
 
 function(track){
 
+
 track.stop();
+
 
 }
 
@@ -1700,14 +1797,16 @@ track.stop();
 
 
 
-/* STOP ONE CONTINUOUS RECORDING */
+/* STOP THE ONE CONTINUOUS RECORDING */
 
 
 if(
 recorder.state!=="inactive"
 ){
 
+
 recorder.stop();
+
 
 }
 
@@ -1812,7 +1911,7 @@ ratingLink
 
 
 
-/* DISPLAY RATINGS */
+/* SHOW RATINGS */
 
 
 const summary=
@@ -1824,7 +1923,7 @@ ratings
 function(item){
 
 
-return (
+return(
 
 item.number+
 
@@ -1848,19 +1947,19 @@ item.difficulty
 );
 
 
-const summaryBox=
+const ratingSummary=
 
 document
 .getElementById("ratingSummary");
 
 
-summaryBox.innerHTML=
+ratingSummary.innerHTML=
 
 "<strong>Self-ratings</strong><br>"+
 summary;
 
 
-summaryBox
+ratingSummary
 .classList
 .remove("hidden");
 
@@ -1903,6 +2002,7 @@ text || ""
 
 
 </script>
+
 
 </body>
 
