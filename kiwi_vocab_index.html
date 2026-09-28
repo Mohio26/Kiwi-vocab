@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kiwi Vocab</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f4f0;font-family:Arial,sans-serif;color:#171717}
+main{max-width:600px;margin:auto;padding:20px}
+.card{background:#fff;padding:25px;border-radius:22px;margin-top:20px}
+h1{font-size:38px;margin:0 0 5px}
+h2{margin-top:8px}
+.sub{font-size:18px;color:#666;margin-bottom:22px}
+label{display:block;font-weight:bold;margin-top:16px}
+input{width:100%;padding:14px;margin-top:6px;font-size:18px;border:1px solid #aaa;border-radius:10px}
+button,a.save{width:100%;display:block;padding:17px;margin-top:18px;border:0;border-radius:12px;background:#171717;color:#fff;font-size:18px;font-weight:bold;text-align:center;text-decoration:none}
+button:disabled{opacity:.35}
+.greenBtn{background:#16833b}
+.status{padding:12px;margin-top:15px;background:#eee;border-radius:10px}
+.good{background:#e5f5e7}
+.error{background:#ffe2e2}
+video{width:100%;max-height:300px;object-fit:cover;margin-top:15px;border-radius:15px;background:#000}
+.hidden{display:none}
+.center{text-align:center;line-height:1.5}
+.word{text-align:center;font-size:42px;font-weight:bold;margin:24px 0 10px;overflow-wrap:anywhere}
+.timer{text-align:center;font-size:48px;font-weight:bold;margin:8px 0}
+.instructions{margin-top:18px;padding:15px;background:#f2f3ef;border-radius:15px}
+.instruction{padding:10px 0;font-size:18px;font-weight:bold}
+.note{font-size:15px;color:#666;line-height:1.5}
+.ratingBox{margin-top:18px;padding:14px;background:#f2f3ef;border-radius:14px;text-align:center}
+.ratingButtons{display:flex;gap:8px;margin-top:10px}
+.ratingButtons button{margin:0;padding:13px 5px;font-size:15px}
+#ratingStatus{margin-top:9px;font-weight:bold}
+.briefList{line-height:1.7;font-size:18px;padding-left:22px}
+.bigCheck{font-size:48px;text-align:center;margin-top:5px}
+.summary{margin-top:15px;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+
+<section id="setup" class="card">
+<h1>🥝 Kiwi Vocab</h1>
+<div class="sub">BUA Vocabulary Speaking Assessment</div>
+<label>Student ID</label>
+<input id="studentID" type="text" placeholder="Enter student ID">
+<label>English Name</label>
+<input id="studentName" type="text" placeholder="Enter English name">
+<button type="button" id="testBtn">TEST CAMERA &amp; MICROPHONE</button>
+<div id="status" class="status">Enter your details, then test your camera and microphone.</div>
+<video id="camera" class="hidden" autoplay muted playsinline></video>
+<button type="button" id="startBtn" class="hidden">START TEST</button>
+</section>
+
+<section id="briefing" class="card hidden">
+<div class="bigCheck">✓</div>
+<h1 class="center">Vocabulary Test Instructions</h1>
+<div id="briefIntro" class="status good"></div>
+<ul class="briefList">
+<li>You have <strong>20 seconds</strong> for each vocabulary word.</li>
+<li><strong>1. Pronounce</strong> the word clearly — about 4 seconds.</li>
+<li><strong>2. Define</strong> the word in English — about 6 seconds.</li>
+<li><strong>3. Give an example sentence</strong> using the word — about 10 seconds.</li>
+<li>After each word, rate it <strong>Easy, Medium, or Hard</strong>.</li>
+<li>You then get a short 3-second breather before the next word.</li>
+<li>The assessment is recorded as <strong>one continuous video</strong>.</li>
+</ul>
+<div class="note center">The timer counts up from 0 to 20 seconds. Complete all three parts naturally within the 20 seconds.</div>
+<button type="button" id="understandBtn" class="greenBtn">✓ I UNDERSTAND — CONTINUE ➜</button>
+</section>
+
+<section id="test" class="card hidden">
+<div id="progress" class="center"></div>
+<video id="testVideo" autoplay muted playsinline></video>
+<div id="word" class="word"></div>
+<div id="timer" class="timer">0 / 20 sec</div>
+<div id="responseStatus" class="center">Complete all three parts.</div>
+
+<div class="instructions">
+<div class="instruction">1. Pronounce the word clearly.</div>
+<div class="instruction">2. Give the definition in English.</div>
+<div class="instruction">3. Give an example sentence using the word.</div>
+</div>
+
+<div class="ratingBox">
+<strong>How difficult was this word?</strong>
+<div class="ratingButtons">
+<button id="easyBtn" type="button" disabled>EASY</button>
+<button id="mediumBtn" type="button" disabled>MEDIUM</button>
+<button id="hardBtn" type="button" disabled>HARD</button>
+</div>
+<div id="ratingStatus">Finish your 20-second response first.</div>
+</div>
+</section>
+
+<section id="done" class="card hidden">
+<h1>Good job! 🥝</h1>
+<h2>Assessment complete.</h2>
+<div id="doneStatus" class="status good">Preparing your recording...</div>
+<video id="savedVideo" class="hidden" controls playsinline></video>
+<a id="saveLink" class="save hidden">SAVE RECORDING</a>
+<div id="ratingSummary" class="summary"></div>
+<a id="ratingLink" class="save hidden">SAVE SELF-RATINGS</a>
+<button type="button" onclick="location.reload()">START AGAIN</button>
+</section>
+
+</main>
+
+<script>
+const TEST_CONFIG={questionCount:2,responseSeconds:20,breakSeconds:3};
+
+const WORDS=[
+"deglaciation","projection","interglacial period","invasive species",
+"magnitude","haptics","cognitive","perceptual","diagnostic","climate change",
+"global warming","greenhouse gases","carbon dioxide","emissions","ecosystem",
+"biodiversity","extinction","habitat","adaptation","consumer","marketing",
+"interaction","communication"
+];
+
+let stream=null;
+let recorder=null;
+let chunks=[];
+let questions=[];
+let questionIndex=0;
+let responseTimer=null;
+let breakTimer=null;
+let ratings=[];
+let waitingForRating=false;
+
+document.getElementById("testBtn").onclick=async function(){
+const status=document.getElementById("status");
+const id=document.getElementById("studentID").value.trim();
+const name=document.getElementById("studentName").value.trim();
+
+if(!id || !name){
+status.textContent="Please enter Student ID and English Name first.";
+status.className="status error";
+return;
+}
+
+status.textContent="Requesting camera and microphone...";
+
+try{
+stream=await navigator.mediaDevices.getUserMedia({
+video:{facingMode:"user"},
+audio:true
+});
+
+const camera=document.getElementById("camera");
+camera.srcObject=stream;
+camera.classList.remove("hidden");
+await camera.play();
+
+document.getElementById("startBtn").classList.remove("hidden");
+
+status.textContent="✓ Camera working — ✓ Microphone connected";
+status.className="status good";
+
+}catch(error){
+status.textContent="Camera/microphone failed: "+error.name+" — "+error.message;
+status.className="status error";
+}
+};
+
+document.getElementById("startBtn").onclick=function(){
+if(!stream){
+alert("Test the camera and microphone first.");
+return;
+}
+
+const actualCount=Math.min(TEST_CONFIG.questionCount,WORDS.length);
+
+document.getElementById("briefIntro").innerHTML=
+"<strong>This test contains "+actualCount+" vocabulary words.</strong><br>"+
+"The number of words will automatically reflect the test set by your teacher.";
+
+document.getElementById("setup").classList.add("hidden");
+document.getElementById("briefing").classList.remove("hidden");
+};
+
+document.getElementById("understandBtn").onclick=function(){
+questions=[...WORDS]
+.sort(()=>Math.random()-.5)
+.slice(0,Math.min(TEST_CONFIG.questionCount,WORDS.length));
+
+questionIndex=0;
+chunks=[];
+ratings=[];
+
+document.getElementById("briefing").classList.add("hidden");
+document.getElementById("test").classList.remove("hidden");
+document.getElementById("testVideo").srcObject=stream;
+
+try{
+recorder=new MediaRecorder(stream);
+
+recorder.ondataavailable=function(event){
+if(event.data && event.data.size>0){
+chunks.push(event.data);
+}
+};
+
+recorder.start(1000);
+showQuestion();
+
+}catch(error){
+alert("Recording could not start: "+error.message);
+}
+};
+
+function showQuestion(){
+if(questionIndex>=questions.length){
+finishTest();
+return;
+}
+
+waitingForRating=false;
+
+document.getElementById("progress").textContent=
+"Question "+(questionIndex+1)+" of "+questions.length;
+
+document.getElementById("word").textContent=questions[questionIndex];
+
+document.getElementById("responseStatus").textContent=
+"Complete all three parts within 20 seconds.";
+
+document.getElementById("ratingStatus").textContent=
+"Finish your 20-second response first.";
+
+setRatingButtons(false);
+startCountUp();
+}
+
+function startCountUp(){
+clearInterval(responseTimer);
+
+let elapsed=0;
+
+document.getElementById("timer").textContent=
+"0 / "+TEST_CONFIG.responseSeconds+" sec";
+
+responseTimer=setInterval(function(){
+elapsed++;
+
+document.getElementById("timer").textContent=
+Math.min(elapsed,TEST_CONFIG.responseSeconds)+
+" / "+TEST_CONFIG.responseSeconds+" sec";
+
+if(elapsed>=TEST_CONFIG.responseSeconds){
+clearInterval(responseTimer);
+waitingForRating=true;
+
+document.getElementById("responseStatus").textContent="Response complete ✓";
+document.getElementById("ratingStatus").textContent="Now rate this word.";
+setRatingButtons(true);
+}
+},1000);
+}
+
+document.getElementById("easyBtn").onclick=function(){saveRating("Easy");};
+document.getElementById("mediumBtn").onclick=function(){saveRating("Medium");};
+document.getElementById("hardBtn").onclick=function(){saveRating("Hard");};
+
+function setRatingButtons(enabled){
+document.getElementById("easyBtn").disabled=!enabled;
+document.getElementById("mediumBtn").disabled=!enabled;
+document.getElementById("hardBtn").disabled=!enabled;
+}
+
+function saveRating(level){
+if(!waitingForRating)return;
+
+waitingForRating=false;
+setRatingButtons(false);
+
+ratings.push({
+number:questionIndex+1,
+word:questions[questionIndex],
+difficulty:level
+});
+
+document.getElementById("ratingStatus").textContent=
+level+" recorded ✓";
+
+nextWordBreak();
+}
+
+function nextWordBreak(){
+let count=TEST_CONFIG.breakSeconds;
+
+document.getElementById("responseStatus").textContent=
+"Next word in "+count+"…";
+
+document.getElementById("timer").textContent="";
+
+clearInterval(breakTimer);
+
+breakTimer=setInterval(function(){
+count--;
+
+if(count>0){
+document.getElementById("responseStatus").textContent=
+"Next word in "+count+"…";
+}else{
+clearInterval(breakTimer);
+questionIndex++;
+
+if(questionIndex>=questions.length){
+finishTest();
+}else{
+showQuestion();
+}
+}
+},1000);
+}
+
+function finishTest(){
+clearInterval(responseTimer);
+clearInterval(breakTimer);
+
+document.getElementById("test").classList.add("hidden");
+document.getElementById("done").classList.remove("hidden");
+document.getElementById("doneStatus").textContent="Preparing your recording...";
+
+if(!recorder){
+document.getElementById("doneStatus").textContent="No recording was available.";
+return;
+}
+
+recorder.onstop=function(){
+const type=recorder.mimeType || "video/webm";
+const blob=new Blob(chunks,{type:type});
+const url=URL.createObjectURL(blob);
+
+const savedVideo=document.getElementById("savedVideo");
+savedVideo.src=url;
+savedVideo.classList.remove("hidden");
+
+const studentID=safeName(document.getElementById("studentID").value);
+const studentName=safeName(document.getElementById("studentName").value);
+
+let extension="webm";
+if(type.includes("mp4"))extension="mp4";
+
+const saveLink=document.getElementById("saveLink");
+saveLink.href=url;
+saveLink.download="KiwiVocab_"+studentID+"_"+studentName+"."+extension;
+saveLink.classList.remove("hidden");
+
+document.getElementById("doneStatus").textContent=
+"✓ Recording ready. Check the video and save it.";
+
+buildRatingDownload(studentID,studentName);
+
+if(stream){
+stream.getTracks().forEach(function(track){track.stop();});
+}
+};
+
+if(recorder.state!=="inactive"){
+recorder.stop();
+}
+}
+
+function buildRatingDownload(studentID,studentName){
+let csv="Question,Word,Difficulty\n";
+
+ratings.forEach(function(item){
+csv+=item.number+',"'+item.word.replace(/"/g,'""')+'",'+item.difficulty+"\n";
+});
+
+const ratingBlob=new Blob([csv],{type:"text/csv"});
+const ratingURL=URL.createObjectURL(ratingBlob);
+
+const ratingLink=document.getElementById("ratingLink");
+ratingLink.href=ratingURL;
+ratingLink.download=
+"KiwiVocab_Ratings_"+studentID+"_"+studentName+".csv";
+ratingLink.classList.remove("hidden");
+
+const summary=ratings.map(function(item){
+return item.number+". "+item.word+" — "+item.difficulty;
+}).join("<br>");
+
+document.getElementById("ratingSummary").innerHTML=
+"<strong>Self-ratings</strong><br>"+summary;
+}
+
+function safeName(text){
+return String(text||"")
+.trim()
+.replace(/[^a-zA-Z0-9_-]/g,"_")
+.slice(0,50);
+}
+</script>
+
+</body>
+</html>
